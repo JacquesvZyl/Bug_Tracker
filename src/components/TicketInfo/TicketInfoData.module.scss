@@ -1,0 +1,26 @@
+.ticket__info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 5px;
+  max-width: 50%;
+  flex: 1;
+  .ticket__info--section {
+    margin: 20px;
+
+    h4 {
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    p {
+      font-size: 12px;
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .ticket__info {
+    max-width: 100%;
+  }
+}

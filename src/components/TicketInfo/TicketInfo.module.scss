@@ -1,0 +1,28 @@
+.ticket__info__wrapper {
+  background-color: #fffdff;
+  min-height: 200px;
+  margin-right: 20px;
+
+  z-index: 4;
+  border-radius: 5px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 10px 20px;
+
+  .header {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .info {
+    flex-direction: column;
+    align-items: center;
+  }
+}
