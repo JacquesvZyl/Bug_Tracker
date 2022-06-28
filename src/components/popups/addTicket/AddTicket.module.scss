@@ -1,0 +1,72 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  .addTicket {
+    padding: 20px 20px;
+    position: fixed;
+    display: block;
+    top: 20vh;
+    min-width: 500px;
+    margin: auto;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 30;
+    animation: slide-down 400ms ease-out forwards;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    h3 {
+      font-size: 13px;
+    }
+
+    .close {
+      cursor: pointer;
+    }
+  }
+  .input__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+    input {
+      padding: 10px 10px;
+    }
+    label {
+      font-size: 13px;
+    }
+
+    .description {
+      height: 100px;
+      resize: vertical;
+      padding: 10px 10px;
+    }
+  }
+
+  .flex__wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .select {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

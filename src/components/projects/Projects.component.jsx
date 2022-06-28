@@ -1,13 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../ui/button/Button.component";
 import styles from "./Projects.module.scss";
 import { testProjectData } from "../../testData/testProjectData";
 import { Link } from "react-router-dom";
 import Modal from "../popups/modal/Modal.component";
 import AddProject from "../popups/addProject/AddProject.component";
+import { getProjects } from "../../Firebase/firebase";
+import { useDispatch } from "react-redux";
+import { setCurrentTicket } from "../../app/projectDataSlice";
 
 function Projects() {
   const [showProjectModal, setProjectModal] = useState(false);
+  const [projects, setProjects] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function setProjectdata() {
+      await getProjects(setProjects);
+      dispatch(setCurrentTicket(null));
+    }
+
+    setProjectdata();
+  }, []);
+
   function onProjectModalClick() {
     setProjectModal((prevVal) => !prevVal);
   }
@@ -29,18 +44,16 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {testProjectData.map((project) => {
+            {projects?.map((project) => {
               return (
                 <tr key={project.id}>
                   <td className={styles.project__name}>
-                    <Link to={`/project/${project.id}`}>
-                      {project.projectName}
-                    </Link>
+                    <Link to={`/project/${project.id}`}>{project.name}</Link>
                   </td>
                   <td className={styles.project__description}>
-                    {project.projectDescription}
+                    {project.description}
                   </td>
-                  <td>{project.projectContributers.join(", ")}</td>
+                  <td>{project.members}</td>
                 </tr>
               );
             })}

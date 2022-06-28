@@ -13,11 +13,14 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   getFirestore,
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
+const uuid = require("uuid");
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlHyrXBWJ_xEt41DmjrpTLN-czaPmveoM",
@@ -59,4 +62,97 @@ export function onAuthStateChangeListener(callback) {
 
 export async function signOutUser() {
   await signOut(auth);
+}
+
+export async function getUserDetails(uid) {
+  return (await getDoc(doc(db, `users/${uid}`))).data();
+}
+
+export async function createProject(data) {
+  try {
+    const ref = doc(db, "projects", uuid.v4());
+    await setDoc(ref, {
+      ...data,
+    });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function getProjects(setState) {
+  return onSnapshot(collection(db, `projects`), (snapshot) => {
+    const data = snapshot.docs.map((snap) => {
+      return {
+        id: snap.id,
+        ...snap.data(),
+      };
+    });
+    setState(data);
+  });
+}
+
+export async function getTickets(id, setState) {
+  return onSnapshot(collection(db, `projects`, id, "tickets"), (snapshot) => {
+    const data = snapshot.docs.map((snap) => {
+      return {
+        id: snap.id,
+        ...snap.data(),
+      };
+    });
+
+    setState(data);
+  });
+}
+export async function getComments(projectId, ticketId, setState) {
+  return onSnapshot(
+    collection(db, `projects`, projectId, "tickets", ticketId, "comments"),
+    (snapshot) => {
+      const data = snapshot.docs.map((snap) => {
+        return {
+          id: snap.id,
+          ...snap.data(),
+        };
+      });
+
+      setState(data);
+    }
+  );
+}
+
+export async function findProject(id) {
+  return (await getDoc(doc(db, `projects/${id}`))).data();
+}
+
+export async function createTicket(id, data) {
+  try {
+    const ref = doc(db, `projects/${id}/tickets`, uuid.v4());
+    await setDoc(ref, {
+      ...data,
+    });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+export async function createComment(projectId, ticketId, data) {
+  try {
+    const ref = doc(
+      db,
+      `projects/${projectId}/tickets/${ticketId}/comments`,
+      uuid.v4()
+    );
+    await setDoc(ref, {
+      ...data,
+    });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+export async function deleteComment(projectId, ticketId, commentId) {
+  try {
+    return await deleteDoc(
+      doc(db, "projects", projectId, "tickets", ticketId, "comments", commentId)
+    );
+  } catch (e) {
+    throw new Error(e.message);
+  }
 }
