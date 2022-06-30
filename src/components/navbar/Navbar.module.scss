@@ -3,12 +3,27 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 200px;
+  width: 130px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 2;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+  .logo {
+    padding-left: 10px;
+    img {
+      max-width: 100px;
+      padding-top: 10px;
+    }
+  }
+  .greet {
+    padding: 20px 10px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #476fde;
+    border-bottom: 1px solid rgb(187, 186, 186);
+  }
 
   .links {
     display: flex;
@@ -38,7 +53,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  padding-left: 200px;
+  padding-left: 130px;
   width: 100%;
   height: 220px;
   color: white;

@@ -1,4 +1,5 @@
 import React from "react";
+import { priorityColors } from "../../utils/Global";
 import styles from "./TicketInfoData.module.scss";
 
 function TicketInfoData({ data }) {
@@ -33,7 +34,13 @@ function TicketInfoData({ data }) {
 
       <div className={`${styles["ticket__info--section"]} ${styles.color}`}>
         <h4>Priority</h4>
-        <p>{data.priority}</p>
+        <p
+          style={{
+            backgroundColor: priorityColors[data.priority.toLowerCase()],
+          }}
+        >
+          {data.priority}
+        </p>
       </div>
 
       <div className={`${styles["ticket__info--section"]} ${styles.color}`}>

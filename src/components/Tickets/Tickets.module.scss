@@ -15,13 +15,13 @@
     padding-bottom: 20px;
     font-size: 12px;
   }
-  .projects {
+  .tickets {
     width: 100%;
     border-collapse: collapse;
 
-    tr {
+    /*    tr {
       border-bottom: 1px solid #dddddd;
-    }
+    } */
 
     th {
       text-align: left;
@@ -34,25 +34,8 @@
       font-size: 12px;
     }
 
-    .project__name {
-      a {
-        text-decoration: none;
-        cursor: pointer;
-        color: #6d60cf;
-        &:hover {
-          color: #4937d4;
-        }
-      }
-    }
-    .project__description {
-      max-width: 800px;
-    }
-
     .ticket {
-      &:hover {
-        background-color: #4937d4;
-        color: white;
-      }
+      cursor: pointer;
     }
   }
 }

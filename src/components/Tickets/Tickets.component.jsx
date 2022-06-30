@@ -8,6 +8,7 @@ import styles from "./Tickets.module.scss";
 
 import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
+import { priorityColors } from "../../utils/Global";
 
 function Tickets({ projectId }) {
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ function Tickets({ projectId }) {
           <h2>Tickets</h2>
           <Button onClick={showTicketHandler}>New Ticket</Button>
         </div>
-        <table className={styles.projects}>
+        <table className={styles.tickets}>
           <thead>
             <tr>
               <th>TITLE</th>
@@ -89,6 +90,10 @@ function Tickets({ projectId }) {
             {tickets?.map((ticket) => {
               return (
                 <tr
+                  style={{
+                    backgroundColor:
+                      priorityColors[ticket.priority.toLowerCase()],
+                  }}
                   key={ticket.id}
                   className={styles.ticket}
                   onClick={() => {
@@ -96,7 +101,7 @@ function Tickets({ projectId }) {
                   }}
                 >
                   <td className={styles.ticket__name}>{ticket.name}</td>
-                  <td className={styles.project__description}>
+                  <td className={styles.ticket__description}>
                     {ticket.description}
                   </td>
                   <td>
