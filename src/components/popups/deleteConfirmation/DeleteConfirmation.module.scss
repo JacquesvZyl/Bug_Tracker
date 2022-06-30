@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  .confirmation {
+    padding: 20px 20px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 20vh;
+    min-width: 500px;
+    margin: auto;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 30;
+    animation: slide-down 400ms ease-out forwards;
+
+    .icon {
+      font-size: 100px;
+      color: rgb(184, 81, 81);
+    }
+
+    .text {
+      margin: 20px 0px;
+    }
+
+    .button__container {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

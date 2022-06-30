@@ -25,7 +25,7 @@ function Comments() {
     }
 
     setCommentsToState();
-  }, [ticketData, projectId]);
+  }, [ticketData.id, projectId]);
 
   async function addComment(e) {
     e.preventDefault();

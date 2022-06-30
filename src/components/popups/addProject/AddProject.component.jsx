@@ -1,37 +1,76 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../../ui/button/Button.component";
 import Modal from "../modal/Modal.component";
 import styles from "./AddProject.module.scss";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import * as ReactDOM from "react-dom";
-import { createProject } from "../../../Firebase/firebase";
+import {
+  createProject,
+  editProject,
+  getUsers,
+} from "../../../Firebase/firebase";
 import { toastStyleError } from "../../../utils/Global";
+import DisplayUser from "../../DisplayUser/DisplayUser.component";
+import { useDispatch } from "react-redux";
+import { setCurrentProject } from "../../../app/projectDataSlice";
 const rootElement = document.getElementById("modal-root");
-function AddProject({ onClickHandler }) {
+function AddProject({ onClickHandler, isNew }) {
+  const user = useSelector((state) => state.user.user);
+  const currentProject = useSelector((state) => state.projects.selectedProject);
   const [disabled, setDisabled] = useState(false);
-  const nameRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const teamMembersRef = useRef(null);
+  const [users, setUsers] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const nameRef = useRef(isNew ? null : currentProject.name);
+  const descriptionRef = useRef(isNew ? null : currentProject.description);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function getUserList() {
+      try {
+        await getUsers(setUsers);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getUserList();
+  }, []);
 
   async function createProjectHandler(e) {
     e.preventDefault();
     setDisabled(true);
     const name = nameRef.current.value;
     const description = descriptionRef.current.value;
-    const members = teamMembersRef.current.value;
+
     try {
       if (
         name.trim().length === 0 ||
         description.trim().length === 0 ||
-        members.trim().length === 0
+        selectedUsers.length === 0
       )
         throw new Error("Please fill out all fields");
 
-      await createProject({
+      const date = new Date();
+
+      const dbData = {
         name,
         description,
-        members,
-      });
+        members: selectedUsers,
+        author: { user: user.fullName, id: user.uid },
+        creationDate: date.toISOString(),
+        modifiedDate: date.toISOString(),
+      };
+      if (isNew) {
+        await createProject(dbData);
+      } else {
+        await editProject(currentProject.id, {
+          name,
+          description,
+          members: selectedUsers,
+          modifiedDate: date.toISOString(),
+        });
+      }
       onClickHandler();
     } catch (error) {
       toast(`⚠ ${error.message}`, {
@@ -47,7 +86,7 @@ function AddProject({ onClickHandler }) {
       <Modal onClick={onClickHandler} />
       <div className={styles.addProject}>
         <div className={styles.header}>
-          <h3>Add new Project</h3>
+          <h3>{isNew ? "Add New Project" : "Edit Project"}</h3>
           <span className={styles.close} onClick={onClickHandler}>
             &#10006;
           </span>
@@ -60,6 +99,7 @@ function AddProject({ onClickHandler }) {
               placeholder="Enter Project Name"
               id="project__name"
               ref={nameRef}
+              defaultValue={isNew ? "" : currentProject.name}
             />
           </div>
           <div className={styles.input__wrapper}>
@@ -69,16 +109,28 @@ function AddProject({ onClickHandler }) {
               id="project__description"
               className={styles.description}
               ref={descriptionRef}
+              defaultValue={isNew ? "" : currentProject.description}
             />
           </div>
-          <div className={styles.input__wrapper}>
-            <label htmlFor="project__members">Add Team Members</label>
-            <input
-              type="textArea"
-              placeholder="Project Members placeholder"
-              id="project__members"
-              ref={teamMembersRef}
-            />
+          <div
+            className={`${styles.input__wrapper} ${styles.members__wrapper}`}
+          >
+            <span>Add Team Members</span>
+            <div className={styles.members}>
+              {users?.map((user) => {
+                return (
+                  <DisplayUser
+                    key={user.id}
+                    selectedUserHandler={setSelectedUsers}
+                    selectedUsers={selectedUsers}
+                    user={user}
+                    selectedList={isNew ? [] : currentProject.members}
+                  >
+                    {user.fullName}
+                  </DisplayUser>
+                );
+              })}
+            </div>
           </div>
           <Button
             disabled={disabled}

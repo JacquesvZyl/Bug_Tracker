@@ -11,7 +11,7 @@ export const projectsSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setProjects: (state, action) => {
+    setAllProjects: (state, action) => {
       state.projects = action.payload;
     },
     removeProjects: (state) => {
@@ -27,7 +27,7 @@ export const projectsSlice = createSlice({
 });
 
 export const {
-  setProjects,
+  setAllProjects,
   removeProjects,
   setCurrentProject,
   setCurrentTicket,

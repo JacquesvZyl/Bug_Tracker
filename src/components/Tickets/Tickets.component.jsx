@@ -6,26 +6,39 @@ import AddTicket from "../popups/addTicket/AddTicket.component";
 import Button from "../ui/button/Button.component";
 import styles from "./Tickets.module.scss";
 
-function Tickets({ id }) {
+import TicketOptions from "../ticketOptions/TicketOptions.component";
+import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
+
+function Tickets({ projectId }) {
   const dispatch = useDispatch();
-  const [showTicketModal, setTcketModal] = useState(false);
+  const [showTicketModal, setTicketModal] = useState(false);
   const [tickets, setTickets] = useState(null);
+  const [ticketId, setTicketId] = useState(null);
+  const [showDelete, setShowDelete] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
     async function showTickets() {
-      await getTickets(id, setTickets);
+      await getTickets(projectId, setTickets);
     }
 
     showTickets();
   }, []);
 
   function showTicketHandler() {
-    setTcketModal((prevVal) => !prevVal);
+    setTicketModal((prevVal) => !prevVal);
+  }
+  function showEditTicketHandler() {
+    setShowEdit((prevVal) => !prevVal);
+  }
+  function showDeleteConfirmationHandler() {
+    setShowDelete((prevVal) => !prevVal);
   }
 
-  function setTicket(e) {
-    const id = e.target.dataset.id;
-    const currentTicket = tickets?.find((ticket) => ticket.id === id);
+  function setTicket(ticketId) {
+    if (!ticketId) return;
+    setTicketId((prevVal) => ticketId);
+    const currentTicket = tickets?.find((ticket) => ticket.id === ticketId);
     console.log(currentTicket);
     dispatch(setCurrentTicket(currentTicket));
   }
@@ -33,7 +46,26 @@ function Tickets({ id }) {
   return (
     <>
       {showTicketModal && (
-        <AddTicket id={id} onClickHandler={showTicketHandler} />
+        <AddTicket
+          id={projectId}
+          isNew={true}
+          onClickHandler={showTicketHandler}
+        />
+      )}
+      {showEdit && (
+        <AddTicket
+          isNew={false}
+          id={projectId}
+          onClickHandler={showEditTicketHandler}
+        />
+      )}
+      {showDelete && (
+        <DeleteConfirmation
+          onClickHandler={showDeleteConfirmationHandler}
+          isTicket={true}
+          ticketId={ticketId}
+          projectId={projectId}
+        />
       )}
       <div className={styles.tickets__wrapper}>
         <div className={styles.header}>
@@ -45,10 +77,12 @@ function Tickets({ id }) {
             <tr>
               <th>TITLE</th>
               <th>DESCRIPTION</th>
-              <th>AUTHOR</th>
-              <th>ESTIMATED TIME (HRS)</th>
+              <th>CONTRIBUTORS</th>
+              <th>TIME (HRS)</th>
               <th>PRIORITY</th>
               <th>STATUS</th>
+              <th>CREATED</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -56,23 +90,29 @@ function Tickets({ id }) {
               return (
                 <tr
                   key={ticket.id}
-                  data-id={ticket.id}
                   className={styles.ticket}
-                  onClick={setTicket}
+                  onClick={() => {
+                    setTicket(ticket.id);
+                  }}
                 >
-                  <td className={styles.ticket__name} data-id={ticket.id}>
-                    {ticket.name}
-                  </td>
-                  <td
-                    className={styles.project__description}
-                    data-id={ticket.id}
-                  >
+                  <td className={styles.ticket__name}>{ticket.name}</td>
+                  <td className={styles.project__description}>
                     {ticket.description}
                   </td>
-                  <td data-id={ticket.id}>{ticket.author}</td>
-                  <td data-id={ticket.id}>{ticket.time}</td>
-                  <td data-id={ticket.id}>{ticket.priority}</td>
-                  <td data-id={ticket.id}>{ticket.status}</td>
+                  <td>
+                    {ticket.members?.map((user) => (
+                      <p key={user.id}>{user.fullName}</p>
+                    ))}
+                  </td>
+                  <td>{ticket.time}</td>
+                  <td>{ticket.priority}</td>
+                  <td>{ticket.status}</td>
+                  <td>{new Date(ticket.creationDate).toLocaleDateString()}</td>
+                  <TicketOptions
+                    onClickDeleteHandler={showDeleteConfirmationHandler}
+                    onClickEditHandler={showEditTicketHandler}
+                    isTicket={true}
+                  />
                 </tr>
               );
             })}

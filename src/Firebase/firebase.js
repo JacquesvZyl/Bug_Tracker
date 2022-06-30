@@ -13,12 +13,16 @@ import {
 import {
   addDoc,
   collection,
+  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
+  query,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 const uuid = require("uuid");
 
@@ -99,7 +103,7 @@ export async function getTickets(id, setState) {
         ...snap.data(),
       };
     });
-
+    console.log(data);
     setState(data);
   });
 }
@@ -118,6 +122,35 @@ export async function getComments(projectId, ticketId, setState) {
     }
   );
 }
+export async function getUsers(setState) {
+  try {
+    return onSnapshot(collection(db, `users`), (doc) => {
+      const data = doc.docs.map((snap) => {
+        return {
+          id: snap.id,
+          ...snap.data(),
+        };
+      });
+
+      setState(data);
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function setModificationDate(projectId) {
+  try {
+    const data = (await getDoc(doc(db, `projects/${projectId}`))).data();
+    console.log(data);
+    await setDoc(doc(db, "projects", projectId), {
+      ...data,
+      modifiedDate: new Date().toISOString(),
+    });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
 
 export async function findProject(id) {
   return (await getDoc(doc(db, `projects/${id}`))).data();
@@ -129,6 +162,8 @@ export async function createTicket(id, data) {
     await setDoc(ref, {
       ...data,
     });
+
+    await setModificationDate(id);
   } catch (e) {
     throw new Error(e.message);
   }
@@ -143,15 +178,68 @@ export async function createComment(projectId, ticketId, data) {
     await setDoc(ref, {
       ...data,
     });
+
+    await setModificationDate(projectId);
   } catch (e) {
     throw new Error(e.message);
   }
 }
 export async function deleteComment(projectId, ticketId, commentId) {
   try {
+    await setModificationDate(projectId);
+
     return await deleteDoc(
       doc(db, "projects", projectId, "tickets", ticketId, "comments", commentId)
     );
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function deleteTicket(projectId, ticketId) {
+  try {
+    await setModificationDate(projectId);
+    return await deleteDoc(doc(db, "projects", projectId, "tickets", ticketId));
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+export async function deleteProject(projectId) {
+  try {
+    return await deleteDoc(doc(db, "projects", projectId));
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function editTicket(projectId, ticketId, data) {
+  try {
+    const dbData = await getDoc(
+      doc(db, `projects/${projectId}/tickets/${ticketId}`)
+    );
+
+    const ref = doc(db, `projects/${projectId}/tickets/${ticketId}`);
+    await setDoc(ref, {
+      ...data,
+      comments: dbData.data().comments ? dbData.data().comments : "",
+    });
+
+    await setModificationDate(projectId);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function editProject(projectId, data) {
+  try {
+    const dbData = await getDoc(doc(db, `projects/${projectId}`));
+
+    const ref = doc(db, `projects/${projectId}`);
+    await setDoc(ref, {
+      ...data,
+      creationDate: dbData.data().creationDate,
+      tickets: dbData.data().tickets ? dbData.data().tickets : [],
+    });
   } catch (e) {
     throw new Error(e.message);
   }

@@ -48,6 +48,20 @@
   }
 }
 
+.members__wrapper {
+  font-size: 13px;
+  .members {
+    padding: 5px 0px;
+    border: 1px solid gray;
+    min-height: 80px;
+    max-height: 80px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+  }
+}
+
 @keyframes slide-down {
   from {
     opacity: 0;

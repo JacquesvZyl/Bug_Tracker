@@ -4,19 +4,31 @@ import Modal from "../modal/Modal.component";
 import styles from "./AddTicket.module.scss";
 import * as ReactDOM from "react-dom";
 import { useSelector } from "react-redux";
-import { createProject, createTicket } from "../../../Firebase/firebase";
+import {
+  createProject,
+  createTicket,
+  editTicket,
+} from "../../../Firebase/firebase";
 import toast from "react-hot-toast";
 import { toastStyleError } from "../../../utils/Global";
+import DisplayUser from "../../DisplayUser/DisplayUser.component";
 const rootElement = document.getElementById("modal-root");
-function AddTicket({ id, onClickHandler }) {
+function AddTicket({ id: projectId, onClickHandler, isNew }) {
   const [disabled, setDisabled] = useState(false);
   const user = useSelector((state) => state.user.user);
-  const nameRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const timeRef = useRef(null);
-  const typeRef = useRef(null);
-  const priorityRef = useRef(null);
-  const statusRef = useRef(null);
+  const currentTicket = useSelector((state) => state.projects.selectedTicket);
+  const nameRef = useRef(isNew ? null : currentTicket.name);
+  const descriptionRef = useRef(isNew ? null : currentTicket.description);
+  const timeRef = useRef(isNew ? null : currentTicket.time);
+  const typeRef = useRef(isNew ? null : currentTicket.type);
+  const priorityRef = useRef(isNew ? null : currentTicket.priority);
+  const statusRef = useRef(isNew ? null : currentTicket.status);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const allProjects = useSelector((state) => state.projects.projects);
+
+  const currentProject = allProjects.find(
+    (project) => project.id === projectId
+  );
 
   async function createTicketHandler(e) {
     e.preventDefault();
@@ -31,11 +43,13 @@ function AddTicket({ id, onClickHandler }) {
       if (
         name.trim().length === 0 ||
         description.trim().length === 0 ||
-        time.trim().length === 0
+        time.trim().length === 0 ||
+        selectedUsers.length === 0
       )
         throw new Error("Please fill out all fields");
 
-      await createTicket(id, {
+      const date = new Date().toISOString();
+      const data = {
         name,
         description,
         time,
@@ -43,7 +57,13 @@ function AddTicket({ id, onClickHandler }) {
         priority,
         status,
         author: user.fullName,
-      });
+        members: selectedUsers,
+        creationDate: date,
+      };
+
+      isNew
+        ? await createTicket(projectId, data)
+        : await editTicket(projectId, currentTicket.id, data);
       onClickHandler();
     } catch (error) {
       toast(`⚠ ${error.message}`, {
@@ -59,7 +79,7 @@ function AddTicket({ id, onClickHandler }) {
       <Modal onClick={onClickHandler} />
       <div className={styles.addTicket}>
         <div className={styles.header}>
-          <h3>Add new Ticket</h3>
+          <h3>{isNew ? "Add new Ticket" : "Edit Ticket"}</h3>
           <span className={styles.close} onClick={onClickHandler}>
             &#10006;
           </span>
@@ -70,45 +90,56 @@ function AddTicket({ id, onClickHandler }) {
             <input
               type="text"
               placeholder="Enter Ticket Title"
+              maxLength={200}
               id="ticket__name"
               ref={nameRef}
+              defaultValue={isNew ? "" : currentTicket.name}
             />
           </div>
           <div className={styles.input__wrapper}>
             <label htmlFor="ticket__description">Ticket Description</label>
             <textarea
+              maxLength={250}
               placeholder="Enter Desription"
               id="ticket__description"
               className={styles.description}
               ref={descriptionRef}
-            />
-          </div>
-          <div className={styles.input__wrapper}>
-            <label htmlFor="ticket__time">Time Estimate (Hours)</label>
-            <input
-              type="number"
-              min={0}
-              placeholder="1"
-              id="ticket__time"
-              ref={timeRef}
+              defaultValue={isNew ? "" : currentTicket.description}
             />
           </div>
           <div className={styles.flex__wrapper}>
+            <div className={styles.input__wrapper}>
+              <label htmlFor="ticket__time">Time Estimate (HRS)</label>
+              <input
+                type="number"
+                min={0.5}
+                step=".5"
+                placeholder="1"
+                id="ticket__time"
+                ref={timeRef}
+                defaultValue={isNew ? "" : currentTicket.time}
+              />
+            </div>
             <div className={styles.select}>
               <span>Type</span>
-              <select name="type" ref={typeRef}>
-                <option value="issue" defaultValue="true">
-                  Issue
-                </option>
-                <option value="bug">Bug</option>
+              <select
+                name="type"
+                ref={typeRef}
+                defaultValue={isNew ? "issue" : currentTicket.type}
+              >
+                <option value="Issue">Issue</option>
+                <option value="Bug">Bug</option>
+                <option value="Feature Request">Feature Request</option>
               </select>
             </div>
             <div className={styles.select}>
               <span>Priority</span>
-              <select name="priority" ref={priorityRef}>
-                <option value="low" defaultValue="true">
-                  Low
-                </option>
+              <select
+                name="priority"
+                ref={priorityRef}
+                defaultValue={isNew ? "low" : currentTicket.priority}
+              >
+                <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
                 <option value="critical">Critical</option>
@@ -116,17 +147,43 @@ function AddTicket({ id, onClickHandler }) {
             </div>
             <div className={styles.select}>
               <span>Status</span>
-              <select name="status" ref={statusRef}>
-                <option value="open" defaultValue="true">
-                  Open
-                </option>
+              <select
+                name="status"
+                ref={statusRef}
+                defaultValue={isNew ? "open" : currentTicket.status}
+              >
+                <option value="open">Open</option>
                 <option value="in progress">In Progress</option>
                 <option value="pending">Pending</option>
                 <option value="resolved">Resolved</option>
               </select>
             </div>
           </div>
-          <Button style={{ padding: "10px 10px" }} type="submit">
+          <div
+            className={`${styles.input__wrapper} ${styles.members__wrapper}`}
+          >
+            <span>Add Team Members</span>
+            <div className={styles.members}>
+              {currentProject?.members?.map((user) => {
+                return (
+                  <DisplayUser
+                    key={user.id}
+                    selectedUserHandler={setSelectedUsers}
+                    selectedUsers={selectedUsers}
+                    user={user}
+                    selectedList={isNew ? [] : currentTicket.members}
+                  >
+                    {user.fullName}
+                  </DisplayUser>
+                );
+              })}
+            </div>
+          </div>
+          <Button
+            style={{ padding: "10px 10px" }}
+            type="submit"
+            disabled={disabled}
+          >
             Submit
           </Button>
         </form>

@@ -18,7 +18,7 @@ function Project() {
       let project = await findProject(id);
 
       console.log(project);
-      dispatch(setCurrentProject(project));
+      dispatch(setCurrentProject({ ...project, id }));
     }
 
     setProject();
@@ -28,7 +28,7 @@ function Project() {
   console.log(currentProject);
   return (
     <div className={styles.project}>
-      <Tickets data={currentProject} id={id} />
+      <Tickets data={currentProject} projectId={id} />
       <TicketInfo />
     </div>
   );
