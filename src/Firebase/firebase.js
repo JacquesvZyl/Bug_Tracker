@@ -6,8 +6,6 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
 import {
@@ -77,6 +75,8 @@ export async function createProject(data) {
     const ref = doc(db, "projects", uuid.v4());
     await setDoc(ref, {
       ...data,
+      creationDate: new Date().toISOString(),
+      modifiedDate: new Date().toISOString(),
     });
   } catch (e) {
     throw new Error(e.message);
@@ -103,7 +103,6 @@ export async function getTickets(id, setState) {
         ...snap.data(),
       };
     });
-    console.log(data);
     setState(data);
   });
 }
@@ -141,10 +140,7 @@ export async function getUsers(setState) {
 
 async function setModificationDate(projectId) {
   try {
-    const data = (await getDoc(doc(db, `projects/${projectId}`))).data();
-    console.log(data);
-    await setDoc(doc(db, "projects", projectId), {
-      ...data,
+    await updateDoc(doc(db, "projects", projectId), {
       modifiedDate: new Date().toISOString(),
     });
   } catch (e) {
@@ -156,14 +152,15 @@ export async function findProject(id) {
   return (await getDoc(doc(db, `projects/${id}`))).data();
 }
 
-export async function createTicket(id, data) {
+export async function createTicket(projectId, data) {
   try {
-    const ref = doc(db, `projects/${id}/tickets`, uuid.v4());
+    const createdId = uuid.v4();
+    const ref = doc(db, `projects/${projectId}/tickets`, createdId);
     await setDoc(ref, {
       ...data,
     });
 
-    await setModificationDate(id);
+    await setModificationDate(projectId);
   } catch (e) {
     throw new Error(e.message);
   }
@@ -214,14 +211,10 @@ export async function deleteProject(projectId) {
 
 export async function editTicket(projectId, ticketId, data) {
   try {
-    const dbData = await getDoc(
-      doc(db, `projects/${projectId}/tickets/${ticketId}`)
-    );
-
     const ref = doc(db, `projects/${projectId}/tickets/${ticketId}`);
-    await setDoc(ref, {
+    await updateDoc(ref, {
       ...data,
-      comments: dbData.data().comments ? dbData.data().comments : "",
+      modifiedDate: new Date().toISOString(),
     });
 
     await setModificationDate(projectId);
@@ -230,17 +223,76 @@ export async function editTicket(projectId, ticketId, data) {
   }
 }
 
-export async function editProject(projectId, data) {
+export async function editProject(projectId, data, users) {
   try {
-    const dbData = await getDoc(doc(db, `projects/${projectId}`));
-
     const ref = doc(db, `projects/${projectId}`);
-    await setDoc(ref, {
+    await updateDoc(ref, {
       ...data,
-      creationDate: dbData.data().creationDate,
-      tickets: dbData.data().tickets ? dbData.data().tickets : [],
+      modifiedDate: new Date().toISOString(),
+    });
+
+    const ticketsSnapShot = await getDocs(
+      collection(db, `projects`, projectId, "tickets")
+    );
+
+    const ticketdata = ticketsSnapShot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+
+    ticketdata.forEach(async (ticket) => {
+      ticket.members.forEach(async (user, index) => {
+        const found = users.some((el) => el.id === user.id);
+        if (!found) {
+          const ref = doc(db, "projects", projectId, "tickets", ticket.id);
+          const ticketData = await getDoc(ref);
+          const newMembersList = ticketData
+            .data()
+            .members.filter((el) => el.id !== user.id);
+
+          await updateDoc(ref, {
+            ...ticketData.data(),
+            members: newMembersList,
+          });
+        }
+      });
     });
   } catch (e) {
     throw new Error(e.message);
   }
+}
+
+export async function getUserTickets(projectId, userId, setState) {
+  return onSnapshot(
+    collection(db, `projects`, projectId, "tickets"),
+    (snapshot) => {
+      const data = snapshot.docs
+        .map((snap) => {
+          const found = snap.data().members.some((user) => user.id === userId);
+          if (found) {
+            return {
+              id: snap.id,
+              ...snap.data(),
+            };
+          }
+          return null;
+        })
+        .filter((el) => el);
+      setState((prevVal) => [...prevVal, ...data]);
+    }
+  );
+}
+
+export async function returnUserTickets(userId, setState) {
+  return onSnapshot(collection(db, `projects`), (snapshot) => {
+    snapshot.docs.map((snap) => {
+      const found = snap.data().members.some((user) => user.id === userId);
+      if (found) {
+        getUserTickets(snap.id, userId, setState);
+      }
+    });
+    //setState(data);
+  });
 }

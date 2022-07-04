@@ -1,3 +1,9 @@
+.project__details {
+  margin-bottom: 10px;
+  color: white;
+  font-size: 14px;
+}
+
 .tickets__wrapper {
   background-color: #fffdff;
   min-height: 200px;
@@ -36,6 +42,15 @@
 
     .ticket {
       cursor: pointer;
+      border: 2px solid white;
+    }
+
+    .selected {
+      border: 2px solid black;
+      td {
+        border-bottom: 2px solid black;
+        border-top: 2px solid black;
+      }
     }
   }
 }

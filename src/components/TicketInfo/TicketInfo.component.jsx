@@ -4,7 +4,7 @@ import TicketInfoData from "./TicketInfoData.component";
 import { useSelector } from "react-redux";
 import Comments from "./Comments.component";
 
-function TicketInfo() {
+function TicketInfo({ tickets }) {
   const ticketData = useSelector((state) => state.projects.selectedTicket);
   return (
     <div className={styles.ticket__info__wrapper}>

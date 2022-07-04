@@ -59,11 +59,17 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
         author: user.fullName,
         members: selectedUsers,
         creationDate: date,
+        modifiedDate: date,
+        projectData: {
+          id: currentProject.id,
+          title: currentProject.name,
+          description: currentProject.description,
+        },
       };
 
       isNew
-        ? await createTicket(projectId, data)
-        : await editTicket(projectId, currentTicket.id, data);
+        ? await createTicket(projectId, data, selectedUsers)
+        : await editTicket(projectId, currentTicket.id, data, selectedUsers);
       onClickHandler();
     } catch (error) {
       toast(`⚠ ${error.message}`, {

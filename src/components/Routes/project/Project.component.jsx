@@ -2,33 +2,28 @@ import React, { useEffect, useState } from "react";
 import Tickets from "../../Tickets/Tickets.component";
 import styles from "./Project.module.scss";
 import { useParams } from "react-router-dom";
-import { testProjectData } from "../../../testData/testProjectData";
-import TicketInfo from "../../TicketInfo/TicketInfo.component";
-import { findProject } from "../../../Firebase/firebase";
-import { setCurrentProject } from "../../../app/projectDataSlice";
-import { useSelector, useDispatch } from "react-redux";
-function Project() {
-  //const [currentProject, setCurrentProject] = useState(null);
-  const currentProject = useSelector((state) => state.projects.selectedProject);
-  const dispatch = useDispatch();
-  const { id } = useParams();
-  useEffect(() => {
-    if (!id) return;
-    async function setProject() {
-      let project = await findProject(id);
 
-      console.log(project);
-      dispatch(setCurrentProject({ ...project, id }));
+import TicketInfo from "../../TicketInfo/TicketInfo.component";
+import { getTickets } from "../../../Firebase/firebase";
+
+import { useDispatch } from "react-redux";
+function Project() {
+  const [tickets, setTickets] = useState(null);
+  const dispatch = useDispatch();
+  const { id: projectId } = useParams();
+
+  useEffect(() => {
+    async function showTickets() {
+      await getTickets(projectId, setTickets);
     }
 
-    setProject();
-  }, [id]);
-  console.log(id);
-  //const currentProject = testProjectData.find((project) => project.id === +id);
-  console.log(currentProject);
+    showTickets();
+    console.log("in useEffect in project route");
+  }, []);
+
   return (
     <div className={styles.project}>
-      <Tickets data={currentProject} projectId={id} />
+      <Tickets tickets={tickets} projectId={projectId} />
       <TicketInfo />
     </div>
   );

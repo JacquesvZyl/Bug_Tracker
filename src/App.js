@@ -11,6 +11,7 @@ import { login, logout } from "./app/userSlice";
 import ProtectedRoute from "./components/ProtectedRoute/ProptectedRoute.component";
 import Login from "./components/Routes/Login/Login.component";
 import ProtectedLoggedInRoute from "./components/ProtectedLoggedInRoute/ProtectedLoggedInRoute.component";
+import TicketsRoute from "./components/Routes/Tickets/TicketsRoute.component";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ function App() {
           <Route path="/" element={<Navbar />}>
             <Route index element={<Dashboard />} />
             <Route path="/project/:id" element={<Project />} />
+            <Route path="/tickets" element={<TicketsRoute />} />
           </Route>
         </Route>
         <Route element={<ProtectedLoggedInRoute />}>

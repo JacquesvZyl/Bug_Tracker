@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Navbar.module.scss";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../Firebase/firebase";
 import { useSelector } from "react-redux";
 import bugTrackerLogo from "../../assets/images/bugTracker.png";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const user = useSelector((state) => state.user.user);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname.includes("ticket")) {
+      setCurrentPage("Tickets");
+    } else if (pathname.includes("admin")) {
+      setCurrentPage("Admin Panel");
+    } else {
+      setCurrentPage("Dashboard");
+    }
+  }, [pathname]);
 
   async function signOutHandler() {
     await signOutUser();
@@ -22,9 +34,15 @@ function Navbar() {
           <span>Hi, {user.name}!</span>
         </div>
         <div className={styles.links}>
-          <Link to="/">Dashboard</Link>
-          <Link to="/tickets">Tickets</Link>
-          <Link to="/admin-panel">Administration</Link>
+          <Link to="/" onClick={() => setCurrentPage("Dashboard")}>
+            Dashboard
+          </Link>
+          <Link to="/tickets" onClick={() => setCurrentPage("Tickets")}>
+            Tickets
+          </Link>
+          <Link to="/admin-panel" onClick={() => setCurrentPage("Admin Panel")}>
+            Administration
+          </Link>
         </div>
         <button className={styles.logout} onClick={signOutHandler}>
           Logout

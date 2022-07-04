@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentTicket } from "../../app/projectDataSlice";
-import { getTickets } from "../../Firebase/firebase";
 import AddTicket from "../popups/addTicket/AddTicket.component";
 import Button from "../ui/button/Button.component";
 import styles from "./Tickets.module.scss";
@@ -9,22 +8,33 @@ import styles from "./Tickets.module.scss";
 import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
 import { priorityColors } from "../../utils/Global";
+import TableHeader from "../TableHeaders/TableHeader.component";
 
-function Tickets({ projectId }) {
+function Tickets({ projectId, tickets }) {
+  console.log(tickets);
+  const [ticketData, setTicketData] = useState(null);
   const dispatch = useDispatch();
+  const [sortedBtns, setSortedBtns] = useState({});
+  const currentProject = useSelector((state) => state.projects.selectedProject);
+  const currentTicketState = useSelector(
+    (state) => state.projects.selectedTicket
+  );
   const [showTicketModal, setTicketModal] = useState(false);
-  const [tickets, setTickets] = useState(null);
+
   const [ticketId, setTicketId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
   useEffect(() => {
-    async function showTickets() {
-      await getTickets(projectId, setTickets);
-    }
+    if (!tickets) return;
+    setTicketData(tickets);
+  }, [tickets]);
 
-    showTickets();
-  }, []);
+  useEffect(() => {
+    if (!ticketId) return;
+    const currentTicket = tickets?.find((ticket) => ticket.id === ticketId);
+    dispatch(setCurrentTicket(currentTicket));
+  }, [ticketId, tickets]);
 
   function showTicketHandler() {
     setTicketModal((prevVal) => !prevVal);
@@ -39,9 +49,6 @@ function Tickets({ projectId }) {
   function setTicket(ticketId) {
     if (!ticketId) return;
     setTicketId((prevVal) => ticketId);
-    const currentTicket = tickets?.find((ticket) => ticket.id === ticketId);
-    console.log(currentTicket);
-    dispatch(setCurrentTicket(currentTicket));
   }
 
   return (
@@ -68,26 +75,79 @@ function Tickets({ projectId }) {
           projectId={projectId}
         />
       )}
+      <div className={styles.project__details}>
+        <h2>{currentProject?.name}</h2>
+      </div>
       <div className={styles.tickets__wrapper}>
         <div className={styles.header}>
-          <h2>Tickets</h2>
+          <h3>Tickets</h3>
           <Button onClick={showTicketHandler}>New Ticket</Button>
         </div>
         <table className={styles.tickets}>
           <thead>
             <tr>
-              <th>TITLE</th>
-              <th>DESCRIPTION</th>
+              <TableHeader
+                type={"name"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                Title
+              </TableHeader>
+              <TableHeader
+                type={"description"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                DESCRIPTION
+              </TableHeader>
+
               <th>CONTRIBUTORS</th>
-              <th>TIME (HRS)</th>
-              <th>PRIORITY</th>
-              <th>STATUS</th>
-              <th>CREATED</th>
+              <TableHeader
+                type={"time"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                time (hrs)
+              </TableHeader>
+              <TableHeader
+                type={"priority"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                priority
+              </TableHeader>
+              <TableHeader
+                type={"status"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                status
+              </TableHeader>
+              <TableHeader
+                type={"creationDate"}
+                state={sortedBtns}
+                setState={setSortedBtns}
+                ticketState={ticketData}
+                setTicketState={setTicketData}
+              >
+                created
+              </TableHeader>
+
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {tickets?.map((ticket) => {
+            {ticketData?.map((ticket) => {
               return (
                 <tr
                   style={{
@@ -95,7 +155,9 @@ function Tickets({ projectId }) {
                       priorityColors[ticket.priority.toLowerCase()],
                   }}
                   key={ticket.id}
-                  className={styles.ticket}
+                  className={`${styles.ticket} ${
+                    currentTicketState?.id === ticket.id ? styles.selected : ""
+                  }`}
                   onClick={() => {
                     setTicket(ticket.id);
                   }}

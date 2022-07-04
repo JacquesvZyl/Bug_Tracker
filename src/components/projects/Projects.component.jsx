@@ -14,6 +14,7 @@ import {
 } from "../../app/projectDataSlice";
 import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
+import TableHeader from "../TableHeaders/TableHeader.component";
 
 function Projects() {
   const [showProjectModal, setProjectModal] = useState(false);
@@ -21,6 +22,7 @@ function Projects() {
   const [showEditProjectModal, setEditProjectModal] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [projectId, setProjectId] = useState(false);
+  const [orderButtons, setOrderButtons] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ function Projects() {
 
     setProjectdata();
   }, []);
+
   useEffect(() => {
     dispatch(setAllProjects(projects));
   }, [projects, dispatch]);
@@ -43,6 +46,7 @@ function Projects() {
       })
     );
   }
+  console.log(projects);
 
   function showEditProjectHandler() {
     setEditProjectModal((prevVal) => !prevVal);
@@ -72,17 +76,51 @@ function Projects() {
       )}
       <div className={styles.projects__wrapper}>
         <div className={styles.header}>
-          <h2>Projects</h2>
+          <h3>Projects</h3>
           <Button onClick={onProjectModalClick}>New Project</Button>
         </div>
         <table className={styles.projects}>
           <thead>
             <tr>
-              <th>PROJECT</th>
-              <th>DESCRIPTION</th>
+              <TableHeader
+                type={"name"}
+                state={orderButtons}
+                setState={setOrderButtons}
+                ticketState={projects}
+                setTicketState={setProjects}
+              >
+                project
+              </TableHeader>
+              <TableHeader
+                type={"description"}
+                state={orderButtons}
+                setState={setOrderButtons}
+                ticketState={projects}
+                setTicketState={setProjects}
+              >
+                description
+              </TableHeader>
+
               <th>CONTRIBUTORS</th>
-              <th>CREATED</th>
-              <th>MODIFIED</th>
+              <TableHeader
+                type={"creationDate"}
+                state={orderButtons}
+                setState={setOrderButtons}
+                ticketState={projects}
+                setTicketState={setProjects}
+              >
+                created
+              </TableHeader>
+              <TableHeader
+                type={"modifiedDate"}
+                state={orderButtons}
+                setState={setOrderButtons}
+                ticketState={projects}
+                setTicketState={setProjects}
+              >
+                modified
+              </TableHeader>
+
               <th></th>
             </tr>
           </thead>

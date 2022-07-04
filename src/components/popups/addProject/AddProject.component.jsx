@@ -51,25 +51,16 @@ function AddProject({ onClickHandler, isNew }) {
       )
         throw new Error("Please fill out all fields");
 
-      const date = new Date();
-
       const dbData = {
         name,
         description,
         members: selectedUsers,
         author: { user: user.fullName, id: user.uid },
-        creationDate: date.toISOString(),
-        modifiedDate: date.toISOString(),
       };
       if (isNew) {
         await createProject(dbData);
       } else {
-        await editProject(currentProject.id, {
-          name,
-          description,
-          members: selectedUsers,
-          modifiedDate: date.toISOString(),
-        });
+        await editProject(currentProject.id, dbData, selectedUsers);
       }
       onClickHandler();
     } catch (error) {

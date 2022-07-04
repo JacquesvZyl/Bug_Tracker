@@ -71,31 +71,33 @@ function Comments() {
       <div className={styles.comments__header}>
         <h3>Comments</h3>
       </div>
-      {sortedComments?.map((comment) => {
-        return (
-          <div className={styles.comment} key={comment.id}>
-            <div className={styles.comment__header}>
-              <p className={styles.author}>
-                {comment.author} -{" "}
-                <span>{new Date(comment.date).toLocaleString()}</span>
-              </p>
-              {user.uid === comment.authorId ? (
-                <span
-                  className={styles.delete}
-                  data-commentid={comment.id}
-                  onClick={removeComment}
-                >
-                  &#10006;
-                </span>
-              ) : (
-                ""
-              )}
-            </div>
+      <div className={styles.comments}>
+        {sortedComments?.map((comment) => {
+          return (
+            <div className={styles.comment} key={comment.id}>
+              <div className={styles.comment__header}>
+                <p className={styles.author}>
+                  {comment.author} -{" "}
+                  <span>{new Date(comment.date).toLocaleString()}</span>
+                </p>
+                {user.uid === comment.authorId ? (
+                  <span
+                    className={styles.delete}
+                    data-commentid={comment.id}
+                    onClick={removeComment}
+                  >
+                    &#10006;
+                  </span>
+                ) : (
+                  ""
+                )}
+              </div>
 
-            <p>{comment.comment}</p>
-          </div>
-        );
-      })}
+              <p>{comment.comment}</p>
+            </div>
+          );
+        })}
+      </div>
 
       <form className={styles.comments__input} onSubmit={addComment}>
         <input type="text" ref={commentRef} placeholder="Add comment" />
