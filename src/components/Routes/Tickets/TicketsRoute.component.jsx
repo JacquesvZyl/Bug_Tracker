@@ -8,6 +8,7 @@ import { returnUserTickets } from "../../../Firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";
+import TableHeader from "../../TableHeaders/TableHeader.component";
 
 function TicketsRoute() {
   const user = useSelector((state) => state.user.user);
@@ -15,6 +16,7 @@ function TicketsRoute() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
+  const [sortButtons, setSortButtons] = useState({});
 
   useEffect(() => {
     setTickets([]);
@@ -45,11 +47,51 @@ function TicketsRoute() {
         <table className={styles.tickets__table}>
           <thead>
             <tr>
-              <th>PROJECT</th>
-              <th>TICKET</th>
-              <th>STATUS</th>
-              <th>PRIORITY</th>
-              <th>CREATED</th>
+              <TableHeader
+                type={"projectData.title"}
+                state={sortButtons}
+                setState={setSortButtons}
+                ticketState={tickets}
+                setTicketState={setTickets}
+              >
+                project
+              </TableHeader>
+              <TableHeader
+                type={"name"}
+                state={sortButtons}
+                setState={setSortButtons}
+                ticketState={tickets}
+                setTicketState={setTickets}
+              >
+                ticket
+              </TableHeader>
+              <TableHeader
+                type={"status"}
+                state={sortButtons}
+                setState={setSortButtons}
+                ticketState={tickets}
+                setTicketState={setTickets}
+              >
+                status
+              </TableHeader>
+              <TableHeader
+                type={"priority"}
+                state={sortButtons}
+                setState={setSortButtons}
+                ticketState={tickets}
+                setTicketState={setTickets}
+              >
+                priority
+              </TableHeader>
+              <TableHeader
+                type={"creationDate"}
+                state={sortButtons}
+                setState={setSortButtons}
+                ticketState={tickets}
+                setTicketState={setTickets}
+              >
+                created
+              </TableHeader>
             </tr>
           </thead>
           <tbody>

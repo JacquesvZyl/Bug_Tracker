@@ -95,6 +95,25 @@ export async function getProjects(setState) {
   });
 }
 
+export async function getAllTickets() {
+  const resp = await getDocs(collection(db, `projects`));
+  const data = await Promise.all(
+    resp.docs.map(async (doc) => {
+      const tickets = await getDocs(
+        collection(db, "projects", doc.id, "tickets")
+      );
+
+      const ticketData = tickets.docs.map((ticket) => {
+        return { id: ticket.id, ...ticket.data() };
+      });
+
+      return ticketData;
+    })
+  );
+
+  return data.flat();
+}
+
 export async function getTickets(id, setState) {
   return onSnapshot(collection(db, `projects`, id, "tickets"), (snapshot) => {
     const data = snapshot.docs.map((snap) => {
@@ -158,6 +177,7 @@ export async function createTicket(projectId, data) {
     const ref = doc(db, `projects/${projectId}/tickets`, createdId);
     await setDoc(ref, {
       ...data,
+      creationDate: new Date().toISOString(),
     });
 
     await setModificationDate(projectId);

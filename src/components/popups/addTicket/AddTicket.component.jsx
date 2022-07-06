@@ -48,7 +48,6 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
       )
         throw new Error("Please fill out all fields");
 
-      const date = new Date().toISOString();
       const data = {
         name,
         description,
@@ -58,8 +57,7 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
         status,
         author: user.fullName,
         members: selectedUsers,
-        creationDate: date,
-        modifiedDate: date,
+
         projectData: {
           id: currentProject.id,
           title: currentProject.name,
