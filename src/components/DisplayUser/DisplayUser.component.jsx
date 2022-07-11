@@ -11,8 +11,8 @@ function DisplayUser({
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
-    if (selectedList.length === 0) return;
-    const isInList = selectedList.some((u) => u.id === user.id);
+    if (selectedList?.length === 0) return;
+    const isInList = selectedList?.some((u) => u.id === user.id);
     setClicked(isInList);
     if (!isInList) return;
     const filtered = selectedUsers.filter((u) => u.id !== user.id);

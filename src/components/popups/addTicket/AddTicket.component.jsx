@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../../ui/button/Button.component";
 import Modal from "../modal/Modal.component";
 import styles from "./AddTicket.module.scss";
@@ -8,6 +8,7 @@ import {
   createProject,
   createTicket,
   editTicket,
+  findProject,
 } from "../../../Firebase/firebase";
 import toast from "react-hot-toast";
 import { toastStyleError } from "../../../utils/Global";
@@ -24,11 +25,16 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
   const priorityRef = useRef(isNew ? null : currentTicket.priority);
   const statusRef = useRef(isNew ? null : currentTicket.status);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const allProjects = useSelector((state) => state.projects.projects);
+  const [currentProject, setCurrentProject] = useState(null);
 
-  const currentProject = allProjects.find(
-    (project) => project.id === projectId
-  );
+  useEffect(() => {
+    async function getCurrentProject() {
+      const data = await findProject(projectId);
+      setCurrentProject({ ...data, id: projectId });
+    }
+
+    getCurrentProject();
+  }, [projectId]);
 
   async function createTicketHandler(e) {
     e.preventDefault();

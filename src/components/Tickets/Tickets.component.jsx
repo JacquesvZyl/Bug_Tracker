@@ -9,17 +9,24 @@ import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
 import { priorityColors } from "../../utils/Global";
 import TableHeader from "../TableHeaders/TableHeader.component";
+import Paginate from "../Paginate/Paginate.component";
+import Members from "../popups/Members/Members.component";
+import { findProject } from "../../Firebase/firebase";
 
 function Tickets({ projectId, tickets }) {
   console.log(tickets);
   const [ticketData, setTicketData] = useState(null);
   const dispatch = useDispatch();
   const [sortedBtns, setSortedBtns] = useState({});
+  const [currentItems, setCurrentItems] = useState(null);
+
   const currentProject = useSelector((state) => state.projects.selectedProject);
   const currentTicketState = useSelector(
     (state) => state.projects.selectedTicket
   );
+
   const [showTicketModal, setTicketModal] = useState(false);
+  const [showMemberModal, setMemberModal] = useState(false);
 
   const [ticketId, setTicketId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
@@ -30,6 +37,15 @@ function Tickets({ projectId, tickets }) {
     setTicketData(tickets);
   }, [tickets]);
 
+  /*   useEffect(() => {
+    async function getCurrentProject() {
+      const data = await findProject(projectId);
+      setCurrentProject(data);
+    }
+
+    getCurrentProject();
+  }, [projectId]); */
+
   useEffect(() => {
     if (!ticketId) return;
     const currentTicket = tickets?.find((ticket) => ticket.id === ticketId);
@@ -38,6 +54,9 @@ function Tickets({ projectId, tickets }) {
 
   function showTicketHandler() {
     setTicketModal((prevVal) => !prevVal);
+  }
+  function showMembersHandler() {
+    setMemberModal((prevVal) => !prevVal);
   }
   function showEditTicketHandler() {
     setShowEdit((prevVal) => !prevVal);
@@ -53,6 +72,12 @@ function Tickets({ projectId, tickets }) {
 
   return (
     <>
+      {showMemberModal && (
+        <Members
+          onClickHandler={showMembersHandler}
+          currentProject={currentProject}
+        />
+      )}
       {showTicketModal && (
         <AddTicket
           id={projectId}
@@ -81,7 +106,10 @@ function Tickets({ projectId, tickets }) {
       <div className={styles.tickets__wrapper}>
         <div className={styles.header}>
           <h3>Tickets</h3>
-          <Button onClick={showTicketHandler}>New Ticket</Button>
+          <div className={styles.buttons}>
+            <Button onClick={showMembersHandler}>Edit Members</Button>
+            <Button onClick={showTicketHandler}>New Ticket</Button>
+          </div>
         </div>
         <table className={styles.tickets}>
           <thead>
@@ -147,7 +175,7 @@ function Tickets({ projectId, tickets }) {
             </tr>
           </thead>
           <tbody>
-            {ticketData?.map((ticket) => {
+            {currentItems?.map((ticket) => {
               return (
                 <tr
                   style={{
@@ -185,6 +213,11 @@ function Tickets({ projectId, tickets }) {
             })}
           </tbody>
         </table>
+        <Paginate
+          data={ticketData}
+          itemsPerPage={5}
+          setCurrentItems={setCurrentItems}
+        />
       </div>
     </>
   );

@@ -12,7 +12,7 @@
   border-radius: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 10px 20px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 
   .header {
     display: flex;
@@ -20,6 +20,11 @@
     align-items: center;
     padding-bottom: 20px;
     font-size: 12px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
   }
   .tickets {
     width: 100%;
@@ -43,6 +48,13 @@
     .ticket {
       cursor: pointer;
       border: 2px solid white;
+
+      .ticket__name {
+        width: 20%;
+      }
+      .ticket__description {
+        width: 40%;
+      }
     }
 
     .selected {

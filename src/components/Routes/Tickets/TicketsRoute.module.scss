@@ -33,14 +33,20 @@
         background-color: #dddddd;
         font-size: 12px;
       }
-      td {
-        padding: 8px;
-        font-size: 12px;
-      }
 
       .ticket {
         cursor: pointer;
         border: 2px solid white;
+
+        td {
+          padding: 8px;
+          font-size: 12px;
+        }
+
+        .project__title,
+        .ticket__title {
+          width: 35%;
+        }
       }
     }
   }

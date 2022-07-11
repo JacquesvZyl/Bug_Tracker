@@ -15,6 +15,7 @@ import {
 import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
 import TableHeader from "../TableHeaders/TableHeader.component";
+import Paginate from "../Paginate/Paginate.component";
 
 function Projects() {
   const [showProjectModal, setProjectModal] = useState(false);
@@ -23,6 +24,7 @@ function Projects() {
   const [showDelete, setShowDelete] = useState(false);
   const [projectId, setProjectId] = useState(false);
   const [orderButtons, setOrderButtons] = useState({});
+  const [currentItems, setCurrentItems] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -125,7 +127,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projects?.map((project) => {
+            {currentItems?.map((project) => {
               return (
                 <tr
                   key={project.id}
@@ -175,6 +177,12 @@ function Projects() {
             })}
           </tbody>
         </table>
+
+        <Paginate
+          data={projects}
+          itemsPerPage={5}
+          setCurrentItems={setCurrentItems}
+        />
       </div>
     </>
   );

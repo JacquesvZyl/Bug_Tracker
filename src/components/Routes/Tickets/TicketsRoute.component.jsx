@@ -4,11 +4,13 @@ import {
   setCurrentProject,
   setCurrentTicket,
 } from "../../../app/projectDataSlice";
+
 import { returnUserTickets } from "../../../Firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";
 import TableHeader from "../../TableHeaders/TableHeader.component";
+import Paginate from "../../Paginate/Paginate.component";
 
 function TicketsRoute() {
   const user = useSelector((state) => state.user.user);
@@ -17,6 +19,7 @@ function TicketsRoute() {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [sortButtons, setSortButtons] = useState({});
+  const [currentItems, setCurrentItems] = useState(null);
 
   useEffect(() => {
     setTickets([]);
@@ -95,7 +98,7 @@ function TicketsRoute() {
             </tr>
           </thead>
           <tbody>
-            {tickets?.map((ticket) => {
+            {currentItems?.map((ticket) => {
               return (
                 <tr
                   style={{
@@ -108,16 +111,25 @@ function TicketsRoute() {
                     onTicketClick(ticket.projectData.id, ticket);
                   }}
                 >
-                  <td>{ticket.projectData?.title}</td>
-                  <td>{ticket.name}</td>
-                  <td>{ticket.status}</td>
-                  <td>{ticket.priority}</td>
-                  <td>{new Date(ticket.creationDate).toLocaleDateString()}</td>
+                  <td className={styles.project__title}>
+                    {ticket.projectData?.title}
+                  </td>
+                  <td className={styles.ticket__title}>{ticket.name}</td>
+                  <td className={styles.status}>{ticket.status}</td>
+                  <td className={styles.priority}>{ticket.priority}</td>
+                  <td className={styles.date}>
+                    {new Date(ticket.creationDate).toLocaleDateString()}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        <Paginate
+          data={tickets}
+          itemsPerPage={5}
+          setCurrentItems={setCurrentItems}
+        />
       </div>
     </div>
   );
