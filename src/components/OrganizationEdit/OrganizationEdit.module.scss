@@ -1,0 +1,40 @@
+.organization__edit {
+  background-color: white;
+
+  width: 50%;
+  border-radius: 5px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 10px 20px;
+  font-size: 13px;
+
+  p {
+    padding-top: 10px;
+  }
+
+  h3 {
+    font-size: 13px;
+  }
+
+  .flex {
+    display: flex;
+    gap: 20px;
+
+    .input {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      flex-direction: column;
+      padding: 20px 0;
+
+      input,
+      select {
+        padding: 5px 5px;
+      }
+    }
+  }
+  .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

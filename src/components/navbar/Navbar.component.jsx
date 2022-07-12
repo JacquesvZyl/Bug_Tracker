@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 function Navbar() {
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const user = useSelector((state) => state.user.user);
+  console.log(user);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -40,9 +41,14 @@ function Navbar() {
           <Link to="/tickets" onClick={() => setCurrentPage("Tickets")}>
             Tickets
           </Link>
-          <Link to="/admin-panel" onClick={() => setCurrentPage("Admin Panel")}>
-            Administration
-          </Link>
+          {user.role?.admin && (
+            <Link
+              to="/administration"
+              onClick={() => setCurrentPage("Admin Panel")}
+            >
+              Administration
+            </Link>
+          )}
         </div>
         <button className={styles.logout} onClick={signOutHandler}>
           Logout

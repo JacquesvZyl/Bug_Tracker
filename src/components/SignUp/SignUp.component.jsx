@@ -38,6 +38,11 @@ function SignUp() {
         name,
         surname,
         fullName: `${name} ${surname}`,
+        role: {
+          admin: false,
+          developer: true,
+          submitter: false,
+        },
       });
     } catch (error) {
       toast(`⚠ ${error.message}`, {

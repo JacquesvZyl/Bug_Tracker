@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+//const { initializeApp } = require("firebase-admin/app");
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -7,6 +8,7 @@ import {
   onAuthStateChanged,
   signOut,
   sendPasswordResetEmail,
+  updateEmail,
 } from "firebase/auth";
 import {
   addDoc,
