@@ -4,3 +4,10 @@
   display: flex;
   gap: 10px;
 }
+
+@media screen and (max-width: 950px) {
+  .administration {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

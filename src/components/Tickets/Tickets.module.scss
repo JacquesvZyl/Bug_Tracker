@@ -25,6 +25,9 @@
   .buttons {
     display: flex;
     gap: 10px;
+    button {
+      font-size: 12px;
+    }
   }
   .tickets {
     width: 100%;
@@ -63,6 +66,23 @@
         border-bottom: 2px solid black;
         border-top: 2px solid black;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .tickets__wrapper {
+    margin-right: 0;
+    padding: 10px 5px;
+
+    .tickets {
+      td {
+        padding: 4px;
+      }
+    }
+
+    .hidden {
+      display: none;
     }
   }
 }

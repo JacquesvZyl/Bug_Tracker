@@ -3,7 +3,7 @@ import Button from "../ui/button/Button.component";
 import styles from "./OrganizationEdit.module.scss";
 import toast from "react-hot-toast";
 import { toastStyleError } from "../../utils/Global";
-import { deleteUser } from "../../Firebase/firbaseAdmin";
+import { deleteUser } from "../../Firebase/firebase";
 
 function OrganizationEdit({ selectedUser }) {
   const nameRef = useRef(selectedUser?.name);

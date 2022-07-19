@@ -13,7 +13,12 @@
     align-items: center;
     padding-bottom: 20px;
     font-size: 12px;
+
+    button {
+      font-size: 12px;
+    }
   }
+
   .projects {
     width: 100%;
     border-collapse: collapse;
@@ -45,6 +50,17 @@
     }
     .project__description {
       max-width: 800px;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .projects__wrapper {
+    width: 100%;
+    padding: 5px 5px;
+
+    .hidden {
+      display: none;
     }
   }
 }

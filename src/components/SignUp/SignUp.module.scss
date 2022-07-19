@@ -17,6 +17,7 @@
     border: none;
     padding: 5px 15px;
     box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+    background-color: #e8f0fe;
   }
 
   .name {
@@ -48,16 +49,26 @@
   }
 }
 
-@media screen and (max-width: 570px) {
+@media screen and (max-width: 600px) {
   .login__form {
-    h1 {
-      font-size: 30px;
+    h2 {
+      font-size: 25px;
       margin-bottom: 10px;
     }
 
     button {
       font-size: 15px;
       padding: 10px 20px;
+    }
+
+    .name {
+      flex-direction: column;
+      height: auto;
+      gap: 5px;
+
+      input {
+        flex: 0 0 40px;
+      }
     }
   }
 }

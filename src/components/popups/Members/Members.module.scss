@@ -4,9 +4,9 @@
   font-size: 14px;
 
   .members {
-    padding: 20px 20px;
+    padding: 0px 20px 20px 20px;
     position: fixed;
-    display: flex;
+
     gap: 20px;
     top: 20vh;
     max-width: 900px;
@@ -17,56 +17,93 @@
     z-index: 30;
     animation: slide-down 400ms ease-out forwards;
 
-    .header {
-      font-size: 13px;
-      font-weight: 600;
+    .close {
+      display: block;
+      text-align: right;
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
 
-    .current__members {
-      width: 500px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      padding: 20px 20px;
+    .flex__container {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
 
-      .current__member {
-        border-bottom: 1px rgb(216, 216, 216) solid;
-      }
-    }
-
-    .members__table {
-      border-collapse: collapse;
-
-      width: 100%;
-
-      th {
-        text-align: left;
-        padding: 8px;
-        background-color: #dddddd;
-        font-size: 10px;
-      }
-      td {
-        padding: 8px;
+      .header {
         font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-    }
 
-    .add__members {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      padding: 20px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 50%;
-
-      .border {
-        font-size: 13px;
-        overflow-y: scroll;
-        border: 1px solid black;
+      .current__members {
+        width: 500px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        padding: 20px 20px;
         display: flex;
         flex-direction: column;
-        max-height: 100px;
+        gap: 20px;
+
+        .current__member {
+          border-bottom: 1px rgb(216, 216, 216) solid;
+        }
+      }
+
+      .members__table {
+        border-collapse: collapse;
+
+        width: 100%;
+
+        th {
+          text-align: left;
+          padding: 8px;
+          background-color: #dddddd;
+          font-size: 10px;
+        }
+        td {
+          padding: 8px;
+          font-size: 12px;
+        }
+      }
+
+      .add__members {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        padding: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 50%;
+
+        .border {
+          font-size: 13px;
+          overflow-y: scroll;
+          border: 1px solid black;
+          display: flex;
+          flex-direction: column;
+          max-height: 100px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 685px) {
+  .wrapper {
+    .members {
+      padding: 0px 10px 10px 10px;
+
+      width: 95vw;
+
+      .flex__container {
+        flex-direction: column;
+
+        .current__members {
+          width: auto;
+          padding: 10px 10px;
+        }
+
+        .add__members {
+          width: 100%;
+        }
       }
     }
   }

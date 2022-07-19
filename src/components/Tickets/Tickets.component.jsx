@@ -133,8 +133,9 @@ function Tickets({ projectId, tickets }) {
                 DESCRIPTION
               </TableHeader>
 
-              <th>CONTRIBUTORS</th>
+              <th className={styles.hidden}>CONTRIBUTORS</th>
               <TableHeader
+                className={styles.hidden}
                 type={"time"}
                 state={sortedBtns}
                 setState={setSortedBtns}
@@ -144,6 +145,7 @@ function Tickets({ projectId, tickets }) {
                 time (hrs)
               </TableHeader>
               <TableHeader
+                className={styles.hidden}
                 type={"priority"}
                 state={sortedBtns}
                 setState={setSortedBtns}
@@ -162,6 +164,7 @@ function Tickets({ projectId, tickets }) {
                 status
               </TableHeader>
               <TableHeader
+                className={styles.hidden}
                 type={"creationDate"}
                 state={sortedBtns}
                 setState={setSortedBtns}
@@ -194,15 +197,17 @@ function Tickets({ projectId, tickets }) {
                   <td className={styles.ticket__description}>
                     {ticket.description}
                   </td>
-                  <td>
+                  <td className={styles.hidden}>
                     {ticket.members?.map((user) => (
                       <p key={user.id}>{user.fullName}</p>
                     ))}
                   </td>
-                  <td>{ticket.time}</td>
-                  <td>{ticket.priority}</td>
+                  <td className={styles.hidden}>{ticket.time}</td>
+                  <td className={styles.hidden}>{ticket.priority}</td>
                   <td>{ticket.status}</td>
-                  <td>{new Date(ticket.creationDate).toLocaleDateString()}</td>
+                  <td className={styles.hidden}>
+                    {new Date(ticket.creationDate).toLocaleDateString()}
+                  </td>
                   <TicketOptions
                     onClickDeleteHandler={showDeleteConfirmationHandler}
                     onClickEditHandler={showEditTicketHandler}

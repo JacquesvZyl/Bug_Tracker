@@ -318,3 +318,11 @@ export async function returnUserTickets(userId, setState) {
     //setState(data);
   });
 }
+
+export async function deleteUser(uid) {
+  try {
+    await getAuth().deleteUser(uid);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

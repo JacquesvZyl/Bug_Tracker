@@ -53,12 +53,45 @@
   position: absolute;
   top: 0;
   left: 0;
+
   padding-left: 130px;
   width: 100%;
   height: 220px;
   color: white;
   z-index: -2;
-  h1 {
-    margin-left: 20px;
+
+  .header__contents {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      margin-left: 20px;
+    }
+
+    .hamburger {
+      display: none;
+      color: white;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .navbar {
+    display: none;
+  }
+
+  .navber__open {
+    display: block;
+  }
+
+  .header {
+    padding-left: 0px;
+
+    .header__contents {
+      .hamburger {
+        display: block;
+      }
+    }
   }
 }

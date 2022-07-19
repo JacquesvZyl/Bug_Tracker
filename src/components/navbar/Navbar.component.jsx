@@ -5,9 +5,11 @@ import { signOutUser } from "../../Firebase/firebase";
 import { useSelector } from "react-redux";
 import bugTrackerLogo from "../../assets/images/bugTracker.png";
 import { useLocation } from "react-router-dom";
+import { Burger } from "@mantine/core";
 
 function Navbar() {
   const [currentPage, setCurrentPage] = useState("Dashboard");
+  const [opened, setOpened] = useState(false);
   const user = useSelector((state) => state.user.user);
   console.log(user);
   const { pathname } = useLocation();
@@ -27,7 +29,7 @@ function Navbar() {
   }
   return (
     <>
-      <header className={styles.navbar}>
+      <header className={`${styles.navbar} ${opened && styles.navber__open}`}>
         <div className={styles.logo}>
           <img src={bugTrackerLogo} alt="logo" />
         </div>
@@ -54,8 +56,17 @@ function Navbar() {
           Logout
         </button>
       </header>
+
       <div className={styles.header}>
-        <h1>{currentPage}</h1>
+        <div className={styles.header__contents}>
+          <h1>{currentPage}</h1>
+          <Burger
+            color="white"
+            className={styles.hamburger}
+            opened={opened}
+            onClick={() => setOpened((o) => !o)}
+          />
+        </div>
       </div>
       <Outlet />
     </>

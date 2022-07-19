@@ -9,6 +9,7 @@ function TableHeader({
   setState,
   ticketState,
   setTicketState,
+  ...rest
 }) {
   function onClickHandler() {
     let sortedData;
@@ -33,7 +34,7 @@ function TableHeader({
   }
 
   return (
-    <th onClick={onClickHandler}>
+    <th onClick={onClickHandler} {...rest}>
       {!state[type] ? (
         <FaSort className={styles.img__gray} />
       ) : state[type] === "ASC" ? (

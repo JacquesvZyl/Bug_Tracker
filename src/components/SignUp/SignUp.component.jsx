@@ -61,8 +61,12 @@ function SignUp() {
         <input ref={surnameRef} type="text" placeholder="Last Name" />
       </div>
       <input ref={emailRef} type="email" placeholder="Email" />
-      <input ref={passwordRef} type="password" placeholder="password" />
-      <input ref={confirmPasswordRef} type="password" placeholder="password" />
+      <input ref={passwordRef} type="password" placeholder="Password" />
+      <input
+        ref={confirmPasswordRef}
+        type="password"
+        placeholder=" Confirm Password"
+      />
       <ButtonWithSpinner isLoading={isLoading} onClick={signUpUser}>
         Create Account
       </ButtonWithSpinner>

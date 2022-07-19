@@ -16,6 +16,7 @@
     border-radius: 5px;
     border: none;
     padding: 5px 15px;
+    background-color: #e8f0fe;
   }
 
   button {
@@ -50,11 +51,12 @@
   }
 }
 
-@media screen and (max-width: 570px) {
+@media screen and (max-width: 600px) {
   .login__form {
     h1 {
       font-size: 30px;
       margin-bottom: 10px;
+      width: 99vw;
     }
 
     button {

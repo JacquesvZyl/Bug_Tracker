@@ -81,6 +81,7 @@ function Projects() {
           <h3>Projects</h3>
           <Button onClick={onProjectModalClick}>New Project</Button>
         </div>
+
         <table className={styles.projects}>
           <thead>
             <tr>
@@ -103,8 +104,9 @@ function Projects() {
                 description
               </TableHeader>
 
-              <th>CONTRIBUTORS</th>
+              <th className={styles.hidden}>CONTRIBUTORS</th>
               <TableHeader
+                className={styles.hidden}
                 type={"creationDate"}
                 state={orderButtons}
                 setState={setOrderButtons}
@@ -114,6 +116,7 @@ function Projects() {
                 created
               </TableHeader>
               <TableHeader
+                className={styles.hidden}
                 type={"modifiedDate"}
                 state={orderButtons}
                 setState={setOrderButtons}
@@ -141,13 +144,13 @@ function Projects() {
                   <td className={styles.project__description}>
                     {project.description}
                   </td>
-                  <td>
+                  <td className={styles.hidden}>
                     {project.members?.length > 0 &&
                       project.members?.map((member) => (
                         <p key={member.id}>{member.fullName}</p>
                       ))}
                   </td>
-                  <td>
+                  <td className={styles.hidden}>
                     {project.creationDate &&
                       new Date(project.creationDate).toLocaleTimeString([], {
                         year: "numeric",
@@ -157,7 +160,7 @@ function Projects() {
                         minute: "2-digit",
                       })}
                   </td>
-                  <td>
+                  <td className={styles.hidden}>
                     {project.modifiedDate &&
                       new Date(project.modifiedDate).toLocaleString([], {
                         year: "numeric",

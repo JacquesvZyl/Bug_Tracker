@@ -83,10 +83,12 @@ function TicketsRoute() {
                 setState={setSortButtons}
                 ticketState={tickets}
                 setTicketState={setTickets}
+                className={styles.hidden}
               >
                 priority
               </TableHeader>
               <TableHeader
+                className={styles.hidden}
                 type={"creationDate"}
                 state={sortButtons}
                 setState={setSortButtons}
@@ -116,8 +118,10 @@ function TicketsRoute() {
                   </td>
                   <td className={styles.ticket__title}>{ticket.name}</td>
                   <td className={styles.status}>{ticket.status}</td>
-                  <td className={styles.priority}>{ticket.priority}</td>
-                  <td className={styles.date}>
+                  <td className={`${styles.priority} ${styles.hidden}`}>
+                    {ticket.priority}
+                  </td>
+                  <td className={`${styles.date} ${styles.hidden}`}>
                     {new Date(ticket.creationDate).toLocaleDateString()}
                   </td>
                 </tr>
