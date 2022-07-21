@@ -9,6 +9,7 @@ function TableHeader({
   setState,
   ticketState,
   setTicketState,
+  isHidden = false,
   ...rest
 }) {
   function onClickHandler() {
@@ -34,15 +35,21 @@ function TableHeader({
   }
 
   return (
-    <th onClick={onClickHandler} {...rest}>
-      {!state[type] ? (
-        <FaSort className={styles.img__gray} />
-      ) : state[type] === "ASC" ? (
-        <FaSortUp />
-      ) : (
-        <FaSortDown />
-      )}
-      {children}
+    <th
+      className={`${styles.table__header} ${isHidden && styles.hidden}`}
+      onClick={onClickHandler}
+      {...rest}
+    >
+      <div className={styles.flex}>
+        {!state[type] ? (
+          <FaSort className={styles.img__gray} />
+        ) : state[type] === "ASC" ? (
+          <FaSortUp />
+        ) : (
+          <FaSortDown />
+        )}
+        <span>{children}</span>
+      </div>
     </th>
   );
 }

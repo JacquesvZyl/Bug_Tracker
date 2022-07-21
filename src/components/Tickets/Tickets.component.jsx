@@ -14,7 +14,12 @@ import Members from "../popups/Members/Members.component";
 import { findProject } from "../../Firebase/firebase";
 
 function Tickets({ projectId, tickets }) {
-  console.log(tickets);
+  const user = useSelector((state) => state.user.user);
+  const userHasNewTicketAccess =
+    user?.role?.admin || user?.role?.submitter || user?.role?.developer;
+  const userHasEditMembersAccess = user?.role?.admin || user?.role?.submitter;
+  const userEditPermissions = user?.role?.admin || user?.role?.developer;
+  const userDeletePermissions = user?.role?.admin;
   const [ticketData, setTicketData] = useState(null);
   const dispatch = useDispatch();
   const [sortedBtns, setSortedBtns] = useState({});
@@ -36,15 +41,6 @@ function Tickets({ projectId, tickets }) {
     if (!tickets) return;
     setTicketData(tickets);
   }, [tickets]);
-
-  /*   useEffect(() => {
-    async function getCurrentProject() {
-      const data = await findProject(projectId);
-      setCurrentProject(data);
-    }
-
-    getCurrentProject();
-  }, [projectId]); */
 
   useEffect(() => {
     if (!ticketId) return;
@@ -107,8 +103,18 @@ function Tickets({ projectId, tickets }) {
         <div className={styles.header}>
           <h3>Tickets</h3>
           <div className={styles.buttons}>
-            <Button onClick={showMembersHandler}>Edit Members</Button>
-            <Button onClick={showTicketHandler}>New Ticket</Button>
+            <Button
+              disabled={!userHasEditMembersAccess}
+              onClick={showMembersHandler}
+            >
+              Edit Members
+            </Button>
+            <Button
+              disabled={!userHasNewTicketAccess}
+              onClick={showTicketHandler}
+            >
+              New Ticket
+            </Button>
           </div>
         </div>
         <table className={styles.tickets}>
@@ -135,24 +141,24 @@ function Tickets({ projectId, tickets }) {
 
               <th className={styles.hidden}>CONTRIBUTORS</th>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"time"}
                 state={sortedBtns}
                 setState={setSortedBtns}
                 ticketState={ticketData}
                 setTicketState={setTicketData}
               >
-                time (hrs)
+                TIME (HRS)
               </TableHeader>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"priority"}
                 state={sortedBtns}
                 setState={setSortedBtns}
                 ticketState={ticketData}
                 setTicketState={setTicketData}
               >
-                priority
+                PRIORITY
               </TableHeader>
               <TableHeader
                 type={"status"}
@@ -161,17 +167,17 @@ function Tickets({ projectId, tickets }) {
                 ticketState={ticketData}
                 setTicketState={setTicketData}
               >
-                status
+                STATUS
               </TableHeader>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"creationDate"}
                 state={sortedBtns}
                 setState={setSortedBtns}
                 ticketState={ticketData}
                 setTicketState={setTicketData}
               >
-                created
+                CREATED
               </TableHeader>
 
               <th></th>
@@ -212,6 +218,8 @@ function Tickets({ projectId, tickets }) {
                     onClickDeleteHandler={showDeleteConfirmationHandler}
                     onClickEditHandler={showEditTicketHandler}
                     isTicket={true}
+                    userEditPermissions={userEditPermissions}
+                    userDeletePermissions={userDeletePermissions}
                   />
                 </tr>
               );

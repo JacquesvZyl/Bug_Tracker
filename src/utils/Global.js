@@ -1,6 +1,6 @@
 export const toastStyle = {
-  background: "white",
-  /* color: "black", */
+  background: "#309F2F",
+  color: "white",
   fontWeight: "bold",
   fontSize: "16px",
   padding: "15px",

@@ -11,3 +11,8 @@
     margin-right: 5px;
   }
 }
+@media screen and (max-width: 680px) {
+  .administration {
+    flex-direction: column;
+  }
+}

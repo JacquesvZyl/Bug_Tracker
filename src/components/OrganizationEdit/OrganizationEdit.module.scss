@@ -1,7 +1,8 @@
 .organization__edit {
   background-color: white;
-
-  width: 50%;
+  margin-right: 20px;
+  width: 20%;
+  height: 100%;
   border-radius: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 10px 20px;
@@ -11,30 +12,38 @@
     padding-top: 10px;
   }
 
+  .username {
+    font-weight: 600;
+    color: #6975e1;
+  }
+
   h3 {
     font-size: 13px;
   }
-
-  .flex {
+  form {
+    height: 100%;
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
 
-    .input {
+    label {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: auto;
       display: flex;
-      gap: 10px;
-      flex: 1;
-      flex-direction: column;
-      padding: 20px 0;
-
-      input,
-      select {
-        padding: 5px 5px;
-      }
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
     }
   }
-  .buttons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+}
+
+@media screen and (max-width: 680px) {
+  .organization__edit {
+    width: 100%;
+    margin-bottom: 20px;
   }
 }

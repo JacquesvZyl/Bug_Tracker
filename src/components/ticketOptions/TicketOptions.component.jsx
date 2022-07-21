@@ -6,6 +6,8 @@ function TicketOptions({
   onClickDeleteHandler,
   onClickEditHandler,
   isTicket,
+  userEditPermissions,
+  userDeletePermissions,
 
   ...options
 }) {
@@ -26,6 +28,8 @@ function TicketOptions({
           onClickHandler={showOptionsHandler}
           onClickDeleteHandler={onClickDeleteHandler}
           onClickEditHandler={onClickEditHandler}
+          userEditPermissions={userEditPermissions}
+          userDeletePermissions={userDeletePermissions}
           isTicket={isTicket}
         />
       )}

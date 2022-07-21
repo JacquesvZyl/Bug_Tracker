@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Button from "../ui/button/Button.component";
 import styles from "./Projects.module.scss";
-import { testProjectData } from "../../testData/testProjectData";
+
 import { Link } from "react-router-dom";
-import Modal from "../popups/modal/Modal.component";
+
 import AddProject from "../popups/addProject/AddProject.component";
-import { findProject, getProjects } from "../../Firebase/firebase";
+import { getProjects } from "../../Firebase/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setAllProjects,
@@ -26,6 +26,10 @@ function Projects() {
   const [orderButtons, setOrderButtons] = useState({});
   const [currentItems, setCurrentItems] = useState(null);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const userHasAccess = user?.role?.admin || user?.role?.submitter;
+  const userHasDeleteAccess = user?.role?.admin;
+  console.log(userHasAccess);
 
   useEffect(() => {
     async function setProjectdata() {
@@ -48,11 +52,11 @@ function Projects() {
       })
     );
   }
-  console.log(projects);
 
   function showEditProjectHandler() {
     setEditProjectModal((prevVal) => !prevVal);
   }
+
   function showDeleteConfirmationHandler() {
     setShowDelete((prevVal) => !prevVal);
   }
@@ -79,7 +83,9 @@ function Projects() {
       <div className={styles.projects__wrapper}>
         <div className={styles.header}>
           <h3>Projects</h3>
-          <Button onClick={onProjectModalClick}>New Project</Button>
+          <Button disabled={!userHasAccess} onClick={onProjectModalClick}>
+            New Project
+          </Button>
         </div>
 
         <table className={styles.projects}>
@@ -106,7 +112,7 @@ function Projects() {
 
               <th className={styles.hidden}>CONTRIBUTORS</th>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"creationDate"}
                 state={orderButtons}
                 setState={setOrderButtons}
@@ -116,7 +122,7 @@ function Projects() {
                 created
               </TableHeader>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"modifiedDate"}
                 state={orderButtons}
                 setState={setOrderButtons}
@@ -174,6 +180,8 @@ function Projects() {
                     onClickDeleteHandler={showDeleteConfirmationHandler}
                     onClickEditHandler={showEditProjectHandler}
                     isTicket={false}
+                    userEditPermissions={userHasDeleteAccess}
+                    userDeletePermissions={userHasDeleteAccess}
                   />
                 </tr>
               );

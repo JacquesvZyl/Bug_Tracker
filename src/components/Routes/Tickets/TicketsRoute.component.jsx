@@ -83,12 +83,12 @@ function TicketsRoute() {
                 setState={setSortButtons}
                 ticketState={tickets}
                 setTicketState={setTickets}
-                className={styles.hidden}
+                isHidden={true}
               >
                 priority
               </TableHeader>
               <TableHeader
-                className={styles.hidden}
+                isHidden={true}
                 type={"creationDate"}
                 state={sortButtons}
                 setState={setSortButtons}

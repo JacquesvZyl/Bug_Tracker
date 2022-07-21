@@ -1,7 +1,7 @@
 .organization {
   background-color: white;
   display: inline-block;
-  width: 40%;
+  width: 100%;
   border-radius: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 10px 20px;
@@ -14,18 +14,39 @@
   .users {
     border: 1px solid rgb(204, 202, 202);
     margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      padding: 8px;
+      background-color: #dddddd;
+      font-size: 12px;
+    }
+    td {
+      padding: 8px;
+      font-size: 12px;
+    }
 
     .user {
       padding: 10px 0px;
       border-bottom: 1px solid rgb(204, 202, 202);
+      background-color: rgb(186, 202, 245);
+      border-bottom: 1px solid white;
       span {
         margin-left: 10px;
       }
 
       &:hover {
-        background-color: rgb(233, 233, 233);
+        background-color: rgb(134, 162, 240);
         cursor: pointer;
       }
     }
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .organization {
+    padding: 10px 10px;
   }
 }

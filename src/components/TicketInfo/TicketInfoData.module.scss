@@ -45,9 +45,11 @@
 
 @media screen and (max-width: 900px) {
   .ticket__info {
-    grid-template-columns: repeat(3, 1fr);
     width: 100%;
     max-height: 400px;
+
+    .ticket__info--section {
+    }
   }
 }
 

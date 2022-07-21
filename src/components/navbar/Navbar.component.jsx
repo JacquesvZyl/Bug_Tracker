@@ -24,12 +24,16 @@ function Navbar() {
     }
   }, [pathname]);
 
+  function setLink(link) {
+    setCurrentPage(link);
+    setOpened(false);
+  }
   async function signOutHandler() {
     await signOutUser();
   }
   return (
     <>
-      <header className={`${styles.navbar} ${opened && styles.navber__open}`}>
+      <header className={`${styles.navbar} ${opened && styles.navbar__open}`}>
         <div className={styles.logo}>
           <img src={bugTrackerLogo} alt="logo" />
         </div>
@@ -37,17 +41,14 @@ function Navbar() {
           <span>Hi, {user.name}!</span>
         </div>
         <div className={styles.links}>
-          <Link to="/" onClick={() => setCurrentPage("Dashboard")}>
+          <Link to="/" onClick={() => setLink("Dashboard")}>
             Dashboard
           </Link>
-          <Link to="/tickets" onClick={() => setCurrentPage("Tickets")}>
+          <Link to="/tickets" onClick={() => setLink("Tickets")}>
             Tickets
           </Link>
           {user.role?.admin && (
-            <Link
-              to="/administration"
-              onClick={() => setCurrentPage("Admin Panel")}
-            >
+            <Link to="/administration" onClick={() => setLink("Admin Panel")}>
               Administration
             </Link>
           )}

@@ -319,10 +319,19 @@ export async function returnUserTickets(userId, setState) {
   });
 }
 
-export async function deleteUser(uid) {
-  try {
-    await getAuth().deleteUser(uid);
-  } catch (error) {
-    throw new Error(error.message);
-  }
+export async function setUserRole(uid, role) {
+  const roleInfo = {
+    admin: false,
+    developer: false,
+    submitter: false,
+    readOnly: false,
+    [role]: true,
+  };
+
+  const ref = doc(db, "users", uid);
+  await updateDoc(ref, {
+    role: {
+      ...roleInfo,
+    },
+  });
 }
