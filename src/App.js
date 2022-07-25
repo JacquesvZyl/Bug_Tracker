@@ -13,6 +13,7 @@ import Login from "./components/Routes/Login/Login.component";
 import ProtectedLoggedInRoute from "./components/ProtectedLoggedInRoute/ProtectedLoggedInRoute.component";
 import TicketsRoute from "./components/Routes/Tickets/TicketsRoute.component";
 import Administration from "./components/Routes/Administration/Administration.component";
+import ProfileRoute from "./components/Routes/Profile/ProfileRoute.component";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,9 @@ function App() {
             surname: data.surname,
             name: data.name,
             role: data.role,
+            profilePicture: data.profilePicture
+              ? data.profilePicture
+              : "images/defaultProfile.png",
           })
         );
       } else {
@@ -53,6 +57,7 @@ function App() {
             <Route path="/project/:id" element={<Project />} />
             <Route path="/tickets" element={<TicketsRoute />} />
             <Route path="/administration" element={<Administration />} />
+            <Route path="/profile" element={<ProfileRoute />} />
           </Route>
         </Route>
         <Route element={<ProtectedLoggedInRoute />}>

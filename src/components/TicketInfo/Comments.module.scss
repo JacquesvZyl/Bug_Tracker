@@ -24,7 +24,7 @@
     max-height: 400px;
     overflow-y: scroll;
     .comment {
-      border-bottom: 1px solid rgb(212, 212, 212);
+      border: 1px solid rgb(212, 212, 212);
       padding: 10px;
       margin-bottom: 10px;
       font-size: 12px;
@@ -34,12 +34,17 @@
   .comment__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 5px;
+
+    .profile__image {
+      height: 35px;
+      width: 35px;
+      margin-right: 10px;
+    }
 
     .author {
       font-size: 10px;
-
+      color: #6975e1;
       font-weight: 600;
       text-transform: uppercase;
       span {
@@ -49,6 +54,7 @@
     }
 
     .delete {
+      margin-left: auto;
       &:hover {
         cursor: pointer;
       }

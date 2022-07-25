@@ -10,6 +10,7 @@ import {
   getComments,
 } from "../../Firebase/firebase";
 import { toastStyleError } from "../../utils/Global";
+import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
 
 function Comments() {
   const { id: projectId } = useParams();
@@ -29,6 +30,13 @@ function Comments() {
 
   async function addComment(e) {
     e.preventDefault();
+    if (user?.role?.readOnly) {
+      toast(`⚠ Insufficient Permissions`, {
+        duration: 4000,
+        style: toastStyleError,
+      });
+      return;
+    }
     const date = new Date();
     try {
       if (commentRef.current.value.trim().length === 0)
@@ -38,6 +46,9 @@ function Comments() {
         author: user.fullName,
         authorId: user.uid,
         date: date.toISOString(),
+        profilePicture: user.profilePicture
+          ? user.profilePicture
+          : "defaultProfile.png",
         comment: commentRef.current.value,
       });
       commentRef.current.value = "";
@@ -76,6 +87,9 @@ function Comments() {
           return (
             <div className={styles.comment} key={comment.id}>
               <div className={styles.comment__header}>
+                <div className={styles.profile__image}>
+                  <ProfilePicture image={comment.profilePicture} />
+                </div>
                 <p className={styles.author}>
                   {comment.author} -{" "}
                   <span>{new Date(comment.date).toLocaleString()}</span>

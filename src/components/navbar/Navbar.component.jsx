@@ -6,10 +6,12 @@ import { useSelector } from "react-redux";
 import bugTrackerLogo from "../../assets/images/bugTracker.png";
 import { useLocation } from "react-router-dom";
 import { Burger } from "@mantine/core";
+import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
 
 function Navbar() {
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const [opened, setOpened] = useState(false);
+
   const user = useSelector((state) => state.user.user);
   console.log(user);
   const { pathname } = useLocation();
@@ -19,6 +21,8 @@ function Navbar() {
       setCurrentPage("Tickets");
     } else if (pathname.includes("admin")) {
       setCurrentPage("Admin Panel");
+    } else if (pathname.includes("profile")) {
+      setCurrentPage("My Profile");
     } else {
       setCurrentPage("Dashboard");
     }
@@ -37,6 +41,9 @@ function Navbar() {
         <div className={styles.logo}>
           <img src={bugTrackerLogo} alt="logo" />
         </div>
+        <div className={styles.profile__picture}>
+          <ProfilePicture />
+        </div>
         <div className={styles.greet}>
           <span>Hi, {user.name}!</span>
         </div>
@@ -46,6 +53,9 @@ function Navbar() {
           </Link>
           <Link to="/tickets" onClick={() => setLink("Tickets")}>
             Tickets
+          </Link>
+          <Link to="/profile" onClick={() => setLink("My Profile")}>
+            Edit Profile
           </Link>
           {user.role?.admin && (
             <Link to="/administration" onClick={() => setLink("Admin Panel")}>

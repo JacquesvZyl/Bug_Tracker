@@ -38,10 +38,12 @@ function SignUp() {
         name,
         surname,
         fullName: `${name} ${surname}`,
+        profilePicture: "images/defaultProfile.png",
         role: {
           admin: false,
-          developer: true,
+          developer: false,
           submitter: false,
+          readOnly: true,
         },
       });
     } catch (error) {
