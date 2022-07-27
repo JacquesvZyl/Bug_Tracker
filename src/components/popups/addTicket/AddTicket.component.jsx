@@ -11,12 +11,13 @@ import {
   findProject,
 } from "../../../Firebase/firebase";
 import toast from "react-hot-toast";
-import { toastStyleError } from "../../../utils/Global";
+import { returnSpecificUser, toastStyleError } from "../../../utils/Global";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
 const rootElement = document.getElementById("modal-root");
 function AddTicket({ id: projectId, onClickHandler, isNew }) {
   const [disabled, setDisabled] = useState(false);
   const user = useSelector((state) => state.user.user);
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
   const currentTicket = useSelector((state) => state.projects.selectedTicket);
   const nameRef = useRef(isNew ? null : currentTicket.name);
   const descriptionRef = useRef(isNew ? null : currentTicket.description);
@@ -31,6 +32,7 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
     async function getCurrentProject() {
       const data = await findProject(projectId);
       setCurrentProject({ ...data, id: projectId });
+      console.log(currentProject);
     }
 
     getCurrentProject();
@@ -181,15 +183,16 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
             <span>Add Team Members</span>
             <div className={styles.members}>
               {currentProject?.members?.map((user) => {
+                const returnUser = returnSpecificUser(allUsers, user.id);
                 return (
                   <DisplayUser
                     key={user.id}
                     selectedUserHandler={setSelectedUsers}
                     selectedUsers={selectedUsers}
-                    user={user}
+                    user={returnUser}
                     selectedList={isNew ? [] : currentTicket.members}
                   >
-                    {user.fullName}
+                    {returnUser.fullName}
                   </DisplayUser>
                 );
               })}

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   projects: null,
+  selectedProject: null,
   selectedTicket: null,
 };
 
@@ -16,13 +17,20 @@ export const projectsSlice = createSlice({
     removeProjects: (state) => {
       state.projects = null;
     },
+    setCurrentProject: (state, action) => {
+      state.selectedProject = action.payload;
+    },
     setCurrentTicket: (state, action) => {
       state.selectedTicket = action.payload;
     },
   },
 });
 
-export const { setAllProjects, removeProjects, setCurrentTicket } =
-  projectsSlice.actions;
+export const {
+  setAllProjects,
+  removeProjects,
+  setCurrentProject,
+  setCurrentTicket,
+} = projectsSlice.actions;
 
 export default projectsSlice.reducer;

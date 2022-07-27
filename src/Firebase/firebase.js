@@ -441,7 +441,7 @@ export async function editUserDetails(uid, data) {
       ...data,
     });
 
-    await editUserDetailsInProjects(uid, data);
+    //await editUserDetailsInProjects(uid, data);
   } catch (e) {
     if (e.code === "auth/requires-recent-login") {
       throw new Error(

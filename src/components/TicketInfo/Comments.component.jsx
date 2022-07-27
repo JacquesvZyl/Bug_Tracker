@@ -9,7 +9,7 @@ import {
   deleteComment,
   getComments,
 } from "../../Firebase/firebase";
-import { toastStyleError } from "../../utils/Global";
+import { returnSpecificUser, toastStyleError } from "../../utils/Global";
 import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
 
 function Comments() {
@@ -18,6 +18,7 @@ function Comments() {
   const user = useSelector((state) => state.user.user);
   const commentRef = useRef(null);
   const [comments, setComments] = useState(null);
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
 
   useEffect(() => {
     async function setCommentsToState() {
@@ -43,12 +44,8 @@ function Comments() {
         throw new Error("Field cannot be blank");
 
       await createComment(projectId, ticketData.id, {
-        author: user.fullName,
         authorId: user.uid,
         date: date.toISOString(),
-        profilePicture: user.profilePicture
-          ? user.profilePicture
-          : "defaultProfile.png",
         comment: commentRef.current.value,
       });
       commentRef.current.value = "";
@@ -84,14 +81,21 @@ function Comments() {
       </div>
       <div className={styles.comments}>
         {sortedComments?.map((comment) => {
+          const returnedUser = returnSpecificUser(allUsers, comment.authorId);
           return (
             <div className={styles.comment} key={comment.id}>
               <div className={styles.comment__header}>
                 <div className={styles.profile__image}>
-                  <ProfilePicture image={comment.profilePicture} />
+                  <ProfilePicture
+                    image={
+                      returnedUser.profilePicture
+                        ? returnedUser.profilePicture
+                        : '/images/"defaultProfile.png"'
+                    }
+                  />
                 </div>
                 <p className={styles.author}>
-                  {comment.author} -{" "}
+                  {returnedUser.fullName} -{" "}
                   <span>{new Date(comment.date).toLocaleString()}</span>
                 </p>
                 {user.uid === comment.authorId ? (

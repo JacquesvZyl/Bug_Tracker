@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentTicket } from "../../app/projectDataSlice";
+import {
+  setCurrentProject,
+  setCurrentTicket,
+} from "../../app/projectDataSlice";
 import AddTicket from "../popups/addTicket/AddTicket.component";
 import Button from "../ui/button/Button.component";
 import styles from "./Tickets.module.scss";
@@ -27,28 +30,40 @@ function Tickets({ projectId, tickets }) {
   const [sortedBtns, setSortedBtns] = useState({});
   const [currentItems, setCurrentItems] = useState(null);
 
+  const currentProject = useSelector((state) => state.projects.selectedProject);
   const currentTicketState = useSelector(
     (state) => state.projects.selectedTicket
   );
 
   const [showTicketModal, setTicketModal] = useState(false);
   const [showMemberModal, setMemberModal] = useState(false);
-
+  const [currentProjectState, setCurrentProjectState] = useState(null);
   const [ticketId, setTicketId] = useState(null);
-  const [currentProject, setCurrentProject] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // This useEffect is for when a user directly goes to a the project tickets link without going to it via the dashboard projects as it causes currentProject state to be null
+    if (currentProject) return;
     const currentProjectId = pathname.split("/").slice(-1)[0];
-    async function setCurrentProjectState() {
+    async function setCurrentProject() {
       const project = await findProject(currentProjectId);
-      setCurrentProject(project);
+      setCurrentProjectState((prevVal) => {
+        return {
+          ...project,
+          id: currentProjectId,
+        };
+      });
     }
 
-    setCurrentProjectState();
+    setCurrentProject();
   }, [pathname]);
+
+  useEffect(() => {
+    if (!currentProjectState) return;
+    dispatch(setCurrentProject(currentProjectState));
+  }, [dispatch, currentProjectState]);
 
   useEffect(() => {
     if (!tickets) return;

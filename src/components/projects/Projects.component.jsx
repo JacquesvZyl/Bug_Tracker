@@ -48,6 +48,11 @@ function Projects() {
 
   function setProjectIdHandler(project) {
     setProjectId((prevVal) => project.id);
+    dispatch(
+      setCurrentProject({
+        ...project,
+      })
+    );
   }
 
   function showEditProjectHandler() {
