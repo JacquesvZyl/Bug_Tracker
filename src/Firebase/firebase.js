@@ -335,3 +335,130 @@ export async function setUserRole(uid, role) {
     },
   });
 }
+
+export async function editUserDetailsInProjects(uid, userData) {
+  const data = {
+    ...userData,
+    id: uid,
+  };
+  try {
+    const projectSnapshot = await getDocs(collection(db, `projects`));
+
+    const projectData = projectSnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+
+    projectData.forEach(async (project) => {
+      const ref = doc(db, "projects", project.id);
+      if (project.author.id === uid) {
+        await updateDoc(ref, {
+          author: {
+            user: data.fullName,
+          },
+        });
+      }
+
+      const found = project.members.find((member) => member.id === uid);
+
+      if (found) {
+        const memberData = project.members.filter(
+          (member) => member.id !== uid
+        );
+        memberData.push(data);
+        await updateDoc(ref, {
+          members: memberData,
+        });
+
+        const ticketsSnapShot = await getDocs(
+          collection(db, `projects`, project.id, "tickets")
+        );
+
+        const ticketdata = ticketsSnapShot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        });
+
+        ticketdata.forEach(async (ticket) => {
+          const ticketRef = doc(
+            db,
+            "projects",
+            project.id,
+            "tickets",
+            ticket.id
+          );
+
+          if (ticket.author.id === data.id) {
+            await updateDoc(ticketRef, {
+              author: {
+                name: data.fullName,
+                id: data.id,
+              },
+            });
+          }
+          ticket.members.forEach(async (user, index) => {
+            if (user.id === data.id) {
+              const ticketData = await getDoc(ticketRef);
+              const newMembersList = ticketData
+                .data()
+                .members.filter((el) => el.id !== data.id);
+              console.log(newMembersList);
+              newMembersList.push(data);
+
+              await updateDoc(ticketRef, {
+                members: newMembersList,
+              });
+            }
+          });
+        });
+      }
+    });
+
+    /*      
+
+      
+
+      
+ */
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function editUserDetails(uid, data) {
+  try {
+    const auth = getAuth();
+    if (auth.currentUser.email !== data.email) {
+      console.log(auth.currentUser);
+      await updateEmail(auth.currentUser, data.email);
+    }
+    const ref = doc(db, `users/${uid}`);
+    await updateDoc(ref, {
+      ...data,
+    });
+
+    await editUserDetailsInProjects(uid, data);
+  } catch (e) {
+    if (e.code === "auth/requires-recent-login") {
+      throw new Error(
+        "Requires recent login to change E-mail. Please Sign in again and try then"
+      );
+    }
+    throw new Error(e.message);
+  }
+}
+
+export async function setUserImage(uid, fileName) {
+  try {
+    const ref = doc(db, "users", uid);
+    await updateDoc(ref, {
+      profilePicture: fileName,
+    });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}

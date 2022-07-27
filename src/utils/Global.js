@@ -25,3 +25,7 @@ export const priorityColors = {
   high: "#F1B02C",
   critical: "#da4232",
 };
+
+export function returnSpecificUser(state, uid) {
+  return state.find((state) => state.id === uid);
+}

@@ -6,7 +6,11 @@ import { useDispatch } from "react-redux";
 import Dashboard from "./components/Routes/Dashboard/Dashboard.component";
 import Project from "./components/Routes/project/Project.component";
 
-import { getUserDetails, onAuthStateChangeListener } from "./Firebase/firebase";
+import {
+  getUserDetails,
+  getUsers,
+  onAuthStateChangeListener,
+} from "./Firebase/firebase";
 import { login, logout } from "./app/userSlice";
 import ProtectedRoute from "./components/ProtectedRoute/ProptectedRoute.component";
 import Login from "./components/Routes/Login/Login.component";
@@ -14,10 +18,14 @@ import ProtectedLoggedInRoute from "./components/ProtectedLoggedInRoute/Protecte
 import TicketsRoute from "./components/Routes/Tickets/TicketsRoute.component";
 import Administration from "./components/Routes/Administration/Administration.component";
 import ProfileRoute from "./components/Routes/Profile/ProfileRoute.component";
+import { setUsers } from "./app/allUsersSlice";
+import toast from "react-hot-toast";
+import { toastStyleError } from "./utils/Global";
 
 function App() {
   const dispatch = useDispatch();
   const [display, setDisplay] = useState(false);
+  const [allUsers, setAllUsers] = useState(null);
 
   useEffect(() => {
     setDisplay(false);
@@ -47,6 +55,25 @@ function App() {
 
     return unsubscribe;
   }, [dispatch]);
+
+  useEffect(() => {
+    async function getAllUsers() {
+      try {
+        await getUsers(setAllUsers);
+      } catch (error) {
+        toast(`⚠ ${error.message}`, {
+          duration: 4000,
+          style: toastStyleError,
+        });
+      }
+    }
+
+    getAllUsers();
+  }, []);
+
+  useEffect(() => {
+    dispatch(setUsers(allUsers));
+  }, [allUsers, dispatch]);
 
   return (
     <div>

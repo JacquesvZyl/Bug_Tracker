@@ -16,6 +16,7 @@ import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
 import TableHeader from "../TableHeaders/TableHeader.component";
 import Paginate from "../Paginate/Paginate.component";
+import { returnSpecificUser } from "../../utils/Global";
 
 function Projects() {
   const [showProjectModal, setProjectModal] = useState(false);
@@ -27,6 +28,7 @@ function Projects() {
   const [currentItems, setCurrentItems] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
   const userHasAccess = user?.role?.admin || user?.role?.submitter;
   const userHasDeleteAccess = user?.role?.admin;
   console.log(userHasAccess);
@@ -46,11 +48,6 @@ function Projects() {
 
   function setProjectIdHandler(project) {
     setProjectId((prevVal) => project.id);
-    dispatch(
-      setCurrentProject({
-        ...project,
-      })
-    );
   }
 
   function showEditProjectHandler() {
@@ -152,9 +149,13 @@ function Projects() {
                   </td>
                   <td className={styles.hidden}>
                     {project.members?.length > 0 &&
-                      project.members?.map((member) => (
-                        <p key={member.id}>{member.fullName}</p>
-                      ))}
+                      project.members?.map((member) => {
+                        const selectedUser = returnSpecificUser(
+                          allUsers,
+                          member.id
+                        );
+                        return <p key={member.id}>{selectedUser.fullName}</p>;
+                      })}
                   </td>
                   <td className={styles.hidden}>
                     {project.creationDate &&

@@ -26,6 +26,7 @@ function DisplayUser({
       const isInList = selectedUsers.some((u) => u.id === user.id);
       if (!isInList) return;
       const filtered = selectedUsers.filter((u) => u.id !== user.id);
+
       selectedUserHandler((prevVal) => filtered);
     }
   }, [clicked, user, selectedUserHandler]);

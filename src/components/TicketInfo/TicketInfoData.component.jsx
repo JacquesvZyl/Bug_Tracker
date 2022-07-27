@@ -17,7 +17,7 @@ function TicketInfoData({ data }) {
       </div>
       <div className={styles["ticket__info--section"]}>
         <h4>Author</h4>
-        <p>{data.author}</p>
+        <p>{data.author.name}</p>
       </div>
       <div className={styles["ticket__info--section"]}>
         <h4>Time Estimate (hours)</h4>

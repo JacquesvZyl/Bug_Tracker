@@ -5,18 +5,19 @@ import Modal from "../modal/Modal.component";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
 import { editProject, getUsers } from "../../../Firebase/firebase";
 import Button from "../../ui/button/Button.component";
-import { toastStyleError } from "../../../utils/Global";
+import { returnSpecificUser, toastStyleError } from "../../../utils/Global";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentProject } from "../../../app/projectDataSlice";
 
 const rootElement = document.getElementById("modal-root");
 
 function Members({ onClickHandler, currentProject }) {
   const [users, setUsers] = useState(null);
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
+
   const [selectedUsers, setSelectedUsers] = useState([]);
   const dispatch = useDispatch();
-  console.log(currentProject.id);
 
   useEffect(() => {
     async function getUserList() {
@@ -34,14 +35,17 @@ function Members({ onClickHandler, currentProject }) {
     e.preventDefault();
 
     try {
+      const filteredUsers = selectedUsers.map((user) => {
+        return { id: user.id };
+      });
       const data = {
-        members: selectedUsers,
+        members: filteredUsers,
       };
-      await editProject(currentProject.id, data, selectedUsers);
+      await editProject(currentProject.id, data, filteredUsers);
       dispatch(
         setCurrentProject({
           ...currentProject,
-          members: selectedUsers,
+          members: filteredUsers,
         })
       );
     } catch (error) {
@@ -52,7 +56,6 @@ function Members({ onClickHandler, currentProject }) {
     }
   }
 
-  console.log(users);
   return ReactDOM.createPortal(
     <div className={styles.wrapper}>
       <Modal onClick={onClickHandler} />
@@ -72,10 +75,12 @@ function Members({ onClickHandler, currentProject }) {
               </thead>
               <tbody>
                 {currentProject?.members?.map((user) => {
+                  const returnedUser = returnSpecificUser(allUsers, user.id);
+
                   return (
                     <tr key={user.id} className={styles.current__member}>
-                      <td>{user.fullName}</td>
-                      <td>{user.email}</td>
+                      <td>{returnedUser?.fullName}</td>
+                      <td>{returnedUser?.email}</td>
                     </tr>
                   );
                 })}

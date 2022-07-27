@@ -13,29 +13,17 @@ import {
 import { toastStyleError } from "../../../utils/Global";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
 import { useDispatch } from "react-redux";
-import { setCurrentProject } from "../../../app/projectDataSlice";
 const rootElement = document.getElementById("modal-root");
 function AddProject({ onClickHandler, isNew }) {
   const user = useSelector((state) => state.user.user);
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
   const currentProject = useSelector((state) => state.projects.selectedProject);
   const [disabled, setDisabled] = useState(false);
-  const [users, setUsers] = useState(null);
+
   const [selectedUsers, setSelectedUsers] = useState([]);
   const nameRef = useRef(isNew ? null : currentProject.name);
   const descriptionRef = useRef(isNew ? null : currentProject.description);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function getUserList() {
-      try {
-        await getUsers(setUsers);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getUserList();
-  }, []);
 
   async function createProjectHandler(e) {
     e.preventDefault();
@@ -51,16 +39,24 @@ function AddProject({ onClickHandler, isNew }) {
       )
         throw new Error("Please fill out all fields");
 
+      const filteredUsers = selectedUsers.map((user) => {
+        return {
+          id: user.id,
+        };
+      });
+
+      console.log(filteredUsers);
+
       const dbData = {
         name,
         description,
-        members: selectedUsers,
-        author: { user: user.fullName, id: user.uid },
+        members: filteredUsers,
+        author: { id: user.uid },
       };
       if (isNew) {
         await createProject(dbData);
       } else {
-        await editProject(currentProject.id, dbData, selectedUsers);
+        await editProject(currentProject.id, dbData, filteredUsers);
       }
       onClickHandler();
     } catch (error) {
@@ -108,7 +104,7 @@ function AddProject({ onClickHandler, isNew }) {
           >
             <span>Add Team Members</span>
             <div className={styles.members}>
-              {users?.map((user) => {
+              {allUsers?.map((user) => {
                 return (
                   <DisplayUser
                     key={user.id}

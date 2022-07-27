@@ -114,8 +114,13 @@ function Comments() {
       </div>
 
       <form className={styles.comments__input} onSubmit={addComment}>
-        <input type="text" ref={commentRef} placeholder="Add comment" />
-        <Button>Comment</Button>
+        <input
+          type="text"
+          ref={commentRef}
+          placeholder={ticketData.status === "resolved" ? "" : "Add comment"}
+          disabled={ticketData.status === "resolved"}
+        />
+        <Button disabled={ticketData.status === "resolved"}>Comment</Button>
       </form>
     </div>
   );

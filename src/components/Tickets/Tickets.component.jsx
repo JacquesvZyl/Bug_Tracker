@@ -4,10 +4,10 @@ import { setCurrentTicket } from "../../app/projectDataSlice";
 import AddTicket from "../popups/addTicket/AddTicket.component";
 import Button from "../ui/button/Button.component";
 import styles from "./Tickets.module.scss";
-
+import { useLocation } from "react-router-dom";
 import TicketOptions from "../ticketOptions/TicketOptions.component";
 import DeleteConfirmation from "../popups/deleteConfirmation/DeleteConfirmation.component";
-import { priorityColors } from "../../utils/Global";
+import { priorityColors, returnSpecificUser } from "../../utils/Global";
 import TableHeader from "../TableHeaders/TableHeader.component";
 import Paginate from "../Paginate/Paginate.component";
 import Members from "../popups/Members/Members.component";
@@ -15,6 +15,8 @@ import { findProject } from "../../Firebase/firebase";
 
 function Tickets({ projectId, tickets }) {
   const user = useSelector((state) => state.user.user);
+
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
   const userHasNewTicketAccess =
     user?.role?.admin || user?.role?.submitter || user?.role?.developer;
   const userHasEditMembersAccess = user?.role?.admin || user?.role?.submitter;
@@ -25,7 +27,6 @@ function Tickets({ projectId, tickets }) {
   const [sortedBtns, setSortedBtns] = useState({});
   const [currentItems, setCurrentItems] = useState(null);
 
-  const currentProject = useSelector((state) => state.projects.selectedProject);
   const currentTicketState = useSelector(
     (state) => state.projects.selectedTicket
   );
@@ -34,8 +35,20 @@ function Tickets({ projectId, tickets }) {
   const [showMemberModal, setMemberModal] = useState(false);
 
   const [ticketId, setTicketId] = useState(null);
+  const [currentProject, setCurrentProject] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const currentProjectId = pathname.split("/").slice(-1)[0];
+    async function setCurrentProjectState() {
+      const project = await findProject(currentProjectId);
+      setCurrentProject(project);
+    }
+
+    setCurrentProjectState();
+  }, [pathname]);
 
   useEffect(() => {
     if (!tickets) return;
@@ -204,9 +217,10 @@ function Tickets({ projectId, tickets }) {
                     {ticket.description}
                   </td>
                   <td className={styles.hidden}>
-                    {ticket.members?.map((user) => (
-                      <p key={user.id}>{user.fullName}</p>
-                    ))}
+                    {ticket.members?.map((user) => {
+                      const currentUser = returnSpecificUser(allUsers, user.id);
+                      return <p key={user.id}>{currentUser.fullName}</p>;
+                    })}
                   </td>
                   <td className={styles.hidden}>{ticket.time}</td>
                   <td className={styles.hidden}>{ticket.priority}</td>

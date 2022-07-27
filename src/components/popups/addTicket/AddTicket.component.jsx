@@ -54,6 +54,10 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
       )
         throw new Error("Please fill out all fields");
 
+      const filteredUsers = selectedUsers.map((user) => {
+        return { id: user.id };
+      });
+
       const data = {
         name,
         description,
@@ -61,8 +65,10 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
         type,
         priority,
         status,
-        author: user.fullName,
-        members: selectedUsers,
+        author: {
+          id: user.uid,
+        },
+        members: filteredUsers,
 
         projectData: {
           id: currentProject.id,
