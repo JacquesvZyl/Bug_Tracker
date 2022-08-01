@@ -5,7 +5,7 @@ import {
   setCurrentTicket,
 } from "../../../app/projectDataSlice";
 
-import { returnUserTickets } from "../../../Firebase/firebase";
+import { getProjects, returnUserTickets } from "../../../Firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";

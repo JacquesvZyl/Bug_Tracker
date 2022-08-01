@@ -5,7 +5,11 @@ import Modal from "../modal/Modal.component";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
 import { editProject, getUsers } from "../../../Firebase/firebase";
 import Button from "../../ui/button/Button.component";
-import { returnSpecificUser, toastStyleError } from "../../../utils/Global";
+import {
+  returnSpecificUser,
+  toastStyle,
+  toastStyleError,
+} from "../../../utils/Global";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentProject } from "../../../app/projectDataSlice";
@@ -48,6 +52,11 @@ function Members({ onClickHandler, currentProject }) {
           members: filteredUsers,
         })
       );
+
+      toast(`Members successfully updated`, {
+        duration: 4000,
+        style: toastStyle,
+      });
     } catch (error) {
       toast(`⚠ ${error.message}`, {
         duration: 4000,

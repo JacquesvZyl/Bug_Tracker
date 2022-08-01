@@ -1,41 +1,57 @@
-.pagination {
+.pagination__container {
   display: flex;
-
   align-items: center;
-  gap: 3px;
   margin-top: 20px;
-  background-color: white;
-  border-radius: 30px;
-  color: rgb(161, 161, 161);
-  font-weight: 600;
-  padding: 10px 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .pagination {
+    display: flex;
 
-  li {
-    list-style: none;
-    a {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 25px;
-      height: 25px;
-      border: 1px solid rgb(204, 204, 204);
-      border-radius: 50%;
-      font-size: 13px;
+    align-items: center;
+    gap: 3px;
 
-      &:hover {
+    background-color: white;
+    border-radius: 30px;
+    color: rgb(161, 161, 161);
+    font-weight: 600;
+
+    li {
+      list-style: none;
+      a {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 25px;
+        border: 1px solid rgb(204, 204, 204);
+        border-radius: 50%;
+        font-size: 13px;
+
+        &:hover {
+          background-color: #7abfe7;
+          color: white;
+        }
+      }
+    }
+    .active {
+      a {
         background-color: #7abfe7;
         color: white;
+        border: none;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 6px 0px,
+          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
       }
     }
   }
-  .active {
-    a {
-      background-color: #7abfe7;
-      color: white;
-      border: none;
-      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 6px 0px,
-        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  .items_per_page {
+    label {
+      margin-right: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    input {
+      max-width: 50px;
     }
   }
 }
