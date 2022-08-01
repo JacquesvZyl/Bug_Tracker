@@ -27,5 +27,6 @@ export const priorityColors = {
 };
 
 export function returnSpecificUser(state, uid) {
+  if (!state) return;
   return state.find((state) => state.id === uid);
 }

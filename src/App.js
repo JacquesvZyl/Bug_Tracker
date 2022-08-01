@@ -41,9 +41,7 @@ function App() {
             surname: data.surname,
             name: data.name,
             role: data.role,
-            profilePicture: data.profilePicture
-              ? data.profilePicture
-              : "images/defaultProfile.png",
+            profilePicture: data.profilePicture,
           })
         );
       } else {

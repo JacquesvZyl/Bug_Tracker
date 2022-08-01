@@ -1,17 +1,15 @@
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../app/userSlice";
-import {
-  editUserDetails,
-  setUserImage,
-  signOutUser,
-} from "../../Firebase/firebase";
+import { login } from "../../app/userSlice";
+import { editUserDetails, signOutUser } from "../../Firebase/firebase";
 import { toastStyle, toastStyleError } from "../../utils/Global";
 import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
 import Button from "../ui/button/Button.component";
 import styles from "./Profile.module.scss";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import { FaUpload } from "react-icons/fa";
 
 function Profile() {
   const user = useSelector((state) => state.user.user);
@@ -19,8 +17,8 @@ function Profile() {
   const surnameRef = useRef(user?.surname);
   const emailRef = useRef(user?.email);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isFilePicked, setIsFilePicked] = useState(false);
   const storage = getStorage();
+  const dispatch = useDispatch();
 
   async function updateUserDetails(e) {
     e.preventDefault();
@@ -72,10 +70,9 @@ function Profile() {
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     console.log(event.target.files);
-    setIsFilePicked(true);
   };
 
-  const handleSubmission = async (event) => {
+  const handleImageSubmission = async (event) => {
     event.preventDefault();
 
     try {
@@ -89,15 +86,27 @@ function Profile() {
         throw new Error("Uploaded image must be smaller than 2Mb.");
       }
       const fileType = selectedFile.name.split(".").pop();
+      const fileName = uuidv4();
       const uploadImageRef = ref(
         storage,
-        `/images/${user.uid}/${user.uid}.${fileType}`
+        `/images/${user.uid}/${fileName}.${fileType}`
       );
       await uploadBytes(uploadImageRef, selectedFile);
-      await setUserImage(
-        user.uid,
-        `/images/${user.uid}/${user.uid}.${fileType}`
-      );
+
+      const userData = {
+        ...user,
+        profilePicture: `/images/${user.uid}/${fileName}.${fileType}`,
+      };
+
+      await editUserDetails(user.uid, userData);
+      dispatch(login(userData));
+
+      toast("Image successfully uploaded", {
+        duration: 4000,
+        style: toastStyle,
+      });
+
+      setSelectedFile(null);
     } catch (e) {
       toast(`⚠ ${e.message}`, {
         duration: 4000,
@@ -108,49 +117,65 @@ function Profile() {
 
   return (
     <div className={styles.profile}>
+      <h3>Edit Profile</h3>
       <div className={styles.profile__info}>
-        <div className={styles.profile__picture}>
-          <ProfilePicture />
-        </div>
+        <div className={styles.profile__info__image}>
+          <div className={styles.profile__picture}>
+            <ProfilePicture profileImage={user.profilePicture} />
+          </div>
 
-        <form className={styles.upload}>
-          <input type="file" id="fileUpload" onChange={changeHandler} />
-          <Button onClick={handleSubmission}>Upload Profile Picture</Button>
+          <form className={styles.upload}>
+            <input
+              className={styles.file__input}
+              type="file"
+              id="fileUpload"
+              onChange={changeHandler}
+            />
+            <label htmlFor="fileUpload">
+              <FaUpload />
+              {"  "}
+              {selectedFile ? selectedFile.name : "Choose a file"}
+            </label>
+            <Button onClick={handleImageSubmission}>Upload</Button>
+          </form>
+        </div>
+        <form
+          onSubmit={updateUserDetails}
+          className={styles.profile__info__text}
+        >
+          <div className={styles.flex}>
+            <div className={styles.input}>
+              <label htmlFor="name">FIRST NAME</label>
+              <input
+                type="text"
+                id="name"
+                ref={nameRef}
+                defaultValue={user?.name}
+              />
+            </div>
+            <div className={styles.input}>
+              <label htmlFor="surname">LAST NAME</label>
+              <input
+                type="text"
+                id="surname"
+                ref={surnameRef}
+                defaultValue={user?.surname}
+              />
+            </div>
+          </div>
+          <div className={styles.input}>
+            <label htmlFor="email">EMAIL</label>
+            <input
+              type="text"
+              id="email"
+              ref={emailRef}
+              defaultValue={user?.email}
+            />
+          </div>
+
+          <Button>Update</Button>
         </form>
       </div>
-      <form onSubmit={updateUserDetails}>
-        <div className={styles.flex}>
-          <div className={styles.input}>
-            <label htmlFor="name">FIRST NAME</label>
-            <input
-              type="text"
-              id="name"
-              ref={nameRef}
-              defaultValue={user?.name}
-            />
-          </div>
-          <div className={styles.input}>
-            <label htmlFor="surname">LAST NAME</label>
-            <input
-              type="text"
-              id="surname"
-              ref={surnameRef}
-              defaultValue={user?.surname}
-            />
-          </div>
-        </div>
-        <div className={styles.input}>
-          <label htmlFor="email">EMAIL</label>
-          <input
-            type="text"
-            id="email"
-            ref={emailRef}
-            defaultValue={user?.email}
-          />
-        </div>
-
-        <Button>Update</Button>
-      </form>
     </div>
   );
 }

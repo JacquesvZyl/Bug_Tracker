@@ -13,7 +13,6 @@ function Navbar() {
   const [opened, setOpened] = useState(false);
 
   const user = useSelector((state) => state.user.user);
-  console.log(user);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -42,7 +41,7 @@ function Navbar() {
           <img src={bugTrackerLogo} alt="logo" />
         </div>
         <div className={styles.profile__picture}>
-          <ProfilePicture />
+          <ProfilePicture profileImage={user.profilePicture} />
         </div>
         <div className={styles.greet}>
           <span>Hi, {user.name}!</span>

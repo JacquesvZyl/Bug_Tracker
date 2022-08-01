@@ -86,19 +86,13 @@ function Comments() {
             <div className={styles.comment} key={comment.id}>
               <div className={styles.comment__header}>
                 <div className={styles.profile__image}>
-                  <ProfilePicture
-                    image={
-                      returnedUser.profilePicture
-                        ? returnedUser.profilePicture
-                        : '/images/"defaultProfile.png"'
-                    }
-                  />
+                  <ProfilePicture profileImage={returnedUser?.profilePicture} />
                 </div>
                 <p className={styles.author}>
-                  {returnedUser.fullName} -{" "}
+                  {returnedUser?.fullName} -{" "}
                   <span>{new Date(comment.date).toLocaleString()}</span>
                 </p>
-                {user.uid === comment.authorId ? (
+                {user.uid === comment.authorId || user.role.admin === true ? (
                   <span
                     className={styles.delete}
                     data-commentid={comment.id}

@@ -47,6 +47,9 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
     const type = typeRef.current.value;
     const priority = priorityRef.current.value;
     const status = statusRef.current.value;
+    const isUserAssignedToProject = currentProject.members.some(
+      (member) => member.id === user.uid
+    );
     try {
       if (
         name.trim().length === 0 ||
@@ -55,6 +58,12 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
         selectedUsers.length === 0
       )
         throw new Error("Please fill out all fields");
+
+      if (!isUserAssignedToProject && user.role.developer === true) {
+        throw new Error(
+          "You need to be assigned to this project in order to add or edit tickets"
+        );
+      }
 
       const filteredUsers = selectedUsers.map((user) => {
         return { id: user.id };
