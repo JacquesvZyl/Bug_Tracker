@@ -5,7 +5,7 @@ import { toastStyleError } from "../../utils/Global";
 import styles from "./ProfilePicture.module.scss";
 import Spinner from "../ui/Spinner/Spinner.component";
 
-function ProfilePicture({ profileImage }) {
+function ProfilePicture({ profileImage, border = null }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
@@ -35,7 +35,12 @@ function ProfilePicture({ profileImage }) {
       {disabled ? (
         <Spinner />
       ) : (
-        <img src={imageUrl} className={styles.image} alt="profile picture" />
+        <img
+          src={imageUrl}
+          className={styles.image}
+          alt="profile picture"
+          style={border && { border: `5px solid ${border}` }}
+        />
       )}
     </>
   );

@@ -129,11 +129,7 @@ function TicketsRoute() {
             })}
           </tbody>
         </table>
-        <Paginate
-          data={tickets}
-          itemsPerPage={5}
-          setCurrentItems={setCurrentItems}
-        />
+        <Paginate data={tickets} setCurrentItems={setCurrentItems} />
       </div>
     </div>
   );

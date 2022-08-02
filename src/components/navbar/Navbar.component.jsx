@@ -7,6 +7,10 @@ import bugTrackerLogo from "../../assets/images/bugTracker.png";
 import { useLocation } from "react-router-dom";
 import { Burger } from "@mantine/core";
 import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
+import { MdSpaceDashboard } from "react-icons/md";
+import { IoTicket } from "react-icons/io5";
+import { ImProfile } from "react-icons/im";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 function Navbar() {
   const [currentPage, setCurrentPage] = useState("Dashboard");
@@ -48,17 +52,17 @@ function Navbar() {
         </div>
         <div className={styles.links}>
           <Link to="/" onClick={() => setLink("Dashboard")}>
-            Dashboard
+            <MdSpaceDashboard /> Dashboard
           </Link>
           <Link to="/tickets" onClick={() => setLink("Tickets")}>
-            Tickets
+            <IoTicket /> Tickets
           </Link>
           <Link to="/profile" onClick={() => setLink("My Profile")}>
-            Edit Profile
+            <ImProfile /> Edit Profile
           </Link>
           {user.role?.admin && (
             <Link to="/administration" onClick={() => setLink("Admin Panel")}>
-              Administration
+              <MdAdminPanelSettings /> Administration
             </Link>
           )}
         </div>

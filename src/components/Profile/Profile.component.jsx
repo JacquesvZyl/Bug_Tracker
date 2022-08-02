@@ -134,9 +134,11 @@ function Profile() {
             <label htmlFor="fileUpload">
               <FaUpload />
               {"  "}
-              {selectedFile ? selectedFile.name : "Choose a file"}
+              {selectedFile ? selectedFile.name : "Change Profile Picture"}
             </label>
-            <Button onClick={handleImageSubmission}>Upload</Button>
+            {selectedFile && (
+              <Button onClick={handleImageSubmission}>Upload</Button>
+            )}
           </form>
         </div>
         <form

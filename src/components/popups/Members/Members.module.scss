@@ -17,11 +17,15 @@
     z-index: 30;
     animation: slide-down 400ms ease-out forwards;
 
-    .close {
-      display: block;
-      text-align: right;
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: end;
       margin-top: 5px;
       margin-bottom: 5px;
+      .close {
+        cursor: pointer;
+      }
     }
 
     .flex__container {

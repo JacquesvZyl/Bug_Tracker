@@ -21,7 +21,7 @@ function OrganizationEdit({ selectedUser }) {
     e.preventDefault();
     try {
       if (loggedInUser?.role?.admin !== true) {
-        throw new Error("isufficent permissions");
+        throw new Error("insufficent permissions");
       }
       setUserRole(selectedUser.id, roleRef.current.value);
       toast(`Role Changed Successfully`, {

@@ -36,20 +36,27 @@
     align-items: center;
     margin-bottom: 5px;
 
-    .profile__image {
-      height: 35px;
-      width: 35px;
-      margin-right: 10px;
-    }
+    .user {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      cursor: pointer;
 
-    .author {
-      font-size: 10px;
-      color: #6975e1;
-      font-weight: 600;
-      text-transform: uppercase;
-      span {
+      .profile__image {
+        height: 35px;
+        width: 35px;
+        margin-right: 10px;
+      }
+
+      .author {
+        font-size: 10px;
+        color: #6975e1;
         font-weight: 600;
-        font-size: 9px;
+        text-transform: uppercase;
+        span {
+          font-weight: 600;
+          font-size: 9px;
+        }
       }
     }
 

@@ -4,7 +4,6 @@ import * as ReactDOM from "react-dom";
 import Modal from "../modal/Modal.component";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
 import { editProject, getUsers } from "../../../Firebase/firebase";
-import Button from "../../ui/button/Button.component";
 import {
   returnSpecificUser,
   toastStyle,
@@ -13,11 +12,13 @@ import {
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentProject } from "../../../app/projectDataSlice";
+import ButtonWithSpinner from "../../ui/buttonWithSpinner/ButtonWithSpinner.component";
 
 const rootElement = document.getElementById("modal-root");
 
 function Members({ onClickHandler, currentProject }) {
   const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(false);
   const allUsers = useSelector((state) => state.allUsers.allUsers);
 
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -38,6 +39,7 @@ function Members({ onClickHandler, currentProject }) {
   async function editMembersHandler(e) {
     e.preventDefault();
 
+    setLoading(true);
     try {
       const filteredUsers = selectedUsers.map((user) => {
         return { id: user.id };
@@ -63,15 +65,18 @@ function Members({ onClickHandler, currentProject }) {
         style: toastStyleError,
       });
     }
+    setLoading(false);
   }
 
   return ReactDOM.createPortal(
     <div className={styles.wrapper}>
       <Modal onClick={onClickHandler} />
       <div className={styles.members}>
-        <span className={styles.close} onClick={onClickHandler}>
-          &#10006;
-        </span>
+        <div className={styles.header}>
+          <span className={styles.close} onClick={onClickHandler}>
+            &#10006;
+          </span>
+        </div>
         <div className={styles.flex__container}>
           <div className={styles.current__members}>
             <span className={styles.header}>Assigned Members</span>
@@ -113,7 +118,9 @@ function Members({ onClickHandler, currentProject }) {
                 );
               })}
             </div>
-            <Button>Edit Members</Button>
+            <ButtonWithSpinner isLoading={loading} disabled={loading}>
+              Edit Members
+            </ButtonWithSpinner>
           </form>
         </div>
       </div>

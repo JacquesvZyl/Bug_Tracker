@@ -11,6 +11,7 @@ import {
 } from "../../Firebase/firebase";
 import { returnSpecificUser, toastStyleError } from "../../utils/Global";
 import ProfilePicture from "../ProfilePicture/ProfilePicture.component";
+import ProfilePopup from "../popups/ProfilePopup/ProfilePopup.component";
 
 function Comments() {
   const { id: projectId } = useParams();
@@ -18,6 +19,8 @@ function Comments() {
   const user = useSelector((state) => state.user.user);
   const commentRef = useRef(null);
   const [comments, setComments] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const allUsers = useSelector((state) => state.allUsers.allUsers);
 
   useEffect(() => {
@@ -28,6 +31,15 @@ function Comments() {
 
     setCommentsToState();
   }, [ticketData.id, projectId]);
+
+  function showProfileHandler() {
+    setShowProfile((prevVal) => !prevVal);
+  }
+
+  function setSelectedUserHandler(user) {
+    setSelectedUser(user);
+    showProfileHandler();
+  }
 
   async function addComment(e) {
     e.preventDefault();
@@ -75,52 +87,76 @@ function Comments() {
   });
   console.log(sortedComments);
   return (
-    <div className={styles.comments__wrapper}>
-      <div className={styles.comments__header}>
-        <h3>Comments</h3>
-      </div>
-      <div className={styles.comments}>
-        {sortedComments?.map((comment) => {
-          const returnedUser = returnSpecificUser(allUsers, comment.authorId);
-          return (
-            <div className={styles.comment} key={comment.id}>
-              <div className={styles.comment__header}>
-                <div className={styles.profile__image}>
-                  <ProfilePicture profileImage={returnedUser?.profilePicture} />
-                </div>
-                <p className={styles.author}>
-                  {returnedUser?.fullName} -{" "}
-                  <span>{new Date(comment.date).toLocaleString()}</span>
-                </p>
-                {user.uid === comment.authorId || user.role.admin === true ? (
-                  <span
-                    className={styles.delete}
-                    data-commentid={comment.id}
-                    onClick={removeComment}
-                  >
-                    &#10006;
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-
-              <p>{comment.comment}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      <form className={styles.comments__input} onSubmit={addComment}>
-        <input
-          type="text"
-          ref={commentRef}
-          placeholder={ticketData.status === "resolved" ? "" : "Add comment"}
-          disabled={ticketData.status === "resolved"}
+    <>
+      {showProfile && (
+        <ProfilePopup
+          userData={selectedUser}
+          onClickHandler={showProfileHandler}
         />
-        <Button disabled={ticketData.status === "resolved"}>Comment</Button>
-      </form>
-    </div>
+      )}
+
+      <div className={styles.comments__wrapper}>
+        <div className={styles.comments__header}>
+          <h3>Comments</h3>
+        </div>
+        <div className={styles.comments}>
+          {sortedComments?.map((comment) => {
+            const returnedUser = returnSpecificUser(allUsers, comment.authorId);
+            {
+              showProfile && (
+                <ProfilePopup
+                  userData={returnedUser}
+                  onClickHandler={showProfileHandler}
+                />
+              );
+            }
+            return (
+              <div className={styles.comment} key={comment.id}>
+                <div className={styles.comment__header}>
+                  <div
+                    className={styles.user}
+                    onClick={() => setSelectedUserHandler(returnedUser)}
+                  >
+                    <div className={styles.profile__image}>
+                      <ProfilePicture
+                        profileImage={returnedUser?.profilePicture}
+                      />
+                    </div>
+                    <p className={styles.author}>
+                      {returnedUser?.fullName} -{" "}
+                      <span>{new Date(comment.date).toLocaleString()}</span>
+                    </p>
+                  </div>
+                  {user.uid === comment.authorId || user.role.admin === true ? (
+                    <span
+                      className={styles.delete}
+                      data-commentid={comment.id}
+                      onClick={removeComment}
+                    >
+                      &#10006;
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+
+                <p>{comment.comment}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <form className={styles.comments__input} onSubmit={addComment}>
+          <input
+            type="text"
+            ref={commentRef}
+            placeholder={ticketData.status === "resolved" ? "" : "Add comment"}
+            disabled={ticketData.status === "resolved"}
+          />
+          <Button disabled={ticketData.status === "resolved"}>Comment</Button>
+        </form>
+      </div>
+    </>
   );
 }
 

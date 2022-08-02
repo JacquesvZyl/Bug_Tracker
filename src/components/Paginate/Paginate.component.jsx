@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPaginationCount } from "../../app/projectDataSlice";
 
 function Paginate({ data, setCurrentItems }) {
-  const [pageCount, setPageCount] = useState(5);
+  const [pageCount, setPageCount] = useState(0);
   // Here we use item offsets; we could also use page offsets
   // following the API or data you're working with.
   const [itemOffset, setItemOffset] = useState(0);
@@ -29,7 +29,7 @@ function Paginate({ data, setCurrentItems }) {
   };
 
   function onChangeHandler(e) {
-    const value = +e.target.value < 1 ? 1 : e.target.value;
+    const value = +e.target.value < 1 ? 1 : +e.target.value;
 
     dispatch(setPaginationCount(value));
   }
