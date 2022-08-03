@@ -5,6 +5,10 @@ const initialState = {
   selectedProject: null,
   selectedTicket: null,
   paginationPageCount: 5,
+  filter: {
+    status: "",
+    priority: "",
+  },
 };
 
 export const projectsSlice = createSlice({
@@ -27,6 +31,9 @@ export const projectsSlice = createSlice({
     setPaginationCount: (state, action) => {
       state.paginationPageCount = action.payload;
     },
+    setFilter: (state, action) => {
+      state.filter = action.payload;
+    },
   },
 });
 
@@ -36,6 +43,7 @@ export const {
   setCurrentProject,
   setCurrentTicket,
   setPaginationCount,
+  setFilter,
 } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

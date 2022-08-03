@@ -15,6 +15,7 @@ import TableHeader from "../TableHeaders/TableHeader.component";
 import Paginate from "../Paginate/Paginate.component";
 import Members from "../popups/Members/Members.component";
 import { findProject } from "../../Firebase/firebase";
+import Filter from "../Filter/Filter.component";
 
 function Tickets({ projectId, tickets }) {
   const user = useSelector((state) => state.user.user);
@@ -29,7 +30,7 @@ function Tickets({ projectId, tickets }) {
   const dispatch = useDispatch();
   const [sortedBtns, setSortedBtns] = useState({});
   const [currentItems, setCurrentItems] = useState(null);
-
+  const filterState = useSelector((state) => state.projects.filter);
   const currentProject = useSelector((state) => state.projects.selectedProject);
   const currentTicketState = useSelector(
     (state) => state.projects.selectedTicket
@@ -67,8 +68,27 @@ function Tickets({ projectId, tickets }) {
 
   useEffect(() => {
     if (!tickets) return;
-    setTicketData(tickets);
-  }, [tickets]);
+
+    const filteredTickets = tickets
+      .filter((ticket) => {
+        if (filterState.priority === "") {
+          return ticket;
+        }
+        if (ticket.priority.includes(filterState.priority)) {
+          return ticket;
+        }
+      })
+      .filter((ticket) => {
+        if (filterState.status === "") {
+          return ticket;
+        }
+        if (ticket.status.includes(filterState.status)) {
+          return ticket;
+        }
+      });
+
+    setTicketData(filteredTickets);
+  }, [tickets, filterState]);
 
   useEffect(() => {
     if (!ticketId) return;
@@ -208,7 +228,9 @@ function Tickets({ projectId, tickets }) {
                 CREATED
               </TableHeader>
 
-              <th></th>
+              <th>
+                <Filter />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -227,7 +249,9 @@ function Tickets({ projectId, tickets }) {
                     setTicket(ticket.id);
                   }}
                 >
-                  <td className={styles.ticket__name}>{ticket.name}</td>
+                  <td className={`${styles.ticket__name} ${styles.capitilize}`}>
+                    {ticket.name}
+                  </td>
                   <td className={styles.ticket__description}>
                     {ticket.description}
                   </td>
@@ -238,8 +262,10 @@ function Tickets({ projectId, tickets }) {
                     })}
                   </td>
                   <td className={styles.hidden}>{ticket.time}</td>
-                  <td className={styles.hidden}>{ticket.priority}</td>
-                  <td>{ticket.status}</td>
+                  <td className={`${styles.hidden} ${styles.capitilize}`}>
+                    {ticket.priority}
+                  </td>
+                  <td className={styles.capitilize}>{ticket.status}</td>
                   <td className={styles.hidden}>
                     {new Date(ticket.creationDate).toLocaleDateString()}
                   </td>

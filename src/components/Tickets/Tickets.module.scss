@@ -46,6 +46,15 @@
     td {
       padding: 8px;
       font-size: 12px;
+      text-align: left;
+
+      &:nth-last-child(1) {
+        text-align: center;
+      }
+    }
+
+    .capitilize {
+      text-transform: capitalize;
     }
 
     .ticket {

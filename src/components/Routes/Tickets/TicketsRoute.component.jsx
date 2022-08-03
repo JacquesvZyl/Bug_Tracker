@@ -11,13 +11,16 @@ import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";
 import TableHeader from "../../TableHeaders/TableHeader.component";
 import Paginate from "../../Paginate/Paginate.component";
+import Filter from "../../Filter/Filter.component";
 
 function TicketsRoute() {
   const user = useSelector((state) => state.user.user);
+  const filterState = useSelector((state) => state.projects.filter);
   const projects = useSelector((state) => state.projects.projects);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
+  const [filteredTickets, setFilteredTickets] = useState(null);
   const [sortButtons, setSortButtons] = useState({});
   const [currentItems, setCurrentItems] = useState(null);
 
@@ -30,6 +33,30 @@ function TicketsRoute() {
 
     getTickets();
   }, [user.uid]);
+
+  useEffect(() => {
+    if (!tickets) return;
+
+    const filteredTicketData = tickets
+      .filter((ticket) => {
+        if (filterState.priority === "") {
+          return ticket;
+        }
+        if (ticket.priority.includes(filterState.priority)) {
+          return ticket;
+        }
+      })
+      .filter((ticket) => {
+        if (filterState.status === "") {
+          return ticket;
+        }
+        if (ticket.status.includes(filterState.status)) {
+          return ticket;
+        }
+      });
+
+    setFilteredTickets(filteredTicketData);
+  }, [filterState, tickets]);
 
   function onTicketClick(projectId, data) {
     dispatch(setCurrentTicket(data));
@@ -97,6 +124,9 @@ function TicketsRoute() {
               >
                 created
               </TableHeader>
+              <th>
+                <Filter />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -117,19 +147,24 @@ function TicketsRoute() {
                     {ticket.projectData?.title}
                   </td>
                   <td className={styles.ticket__title}>{ticket.name}</td>
-                  <td className={styles.status}>{ticket.status}</td>
-                  <td className={`${styles.priority} ${styles.hidden}`}>
+                  <td className={`${styles.status} ${styles.capitalize}`}>
+                    {ticket.status}
+                  </td>
+                  <td
+                    className={`${styles.priority} ${styles.hidden} ${styles.capitalize}`}
+                  >
                     {ticket.priority}
                   </td>
                   <td className={`${styles.date} ${styles.hidden}`}>
                     {new Date(ticket.creationDate).toLocaleDateString()}
                   </td>
+                  <td></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <Paginate data={tickets} setCurrentItems={setCurrentItems} />
+        <Paginate data={filteredTickets} setCurrentItems={setCurrentItems} />
       </div>
     </div>
   );

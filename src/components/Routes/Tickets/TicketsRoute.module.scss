@@ -43,6 +43,10 @@
           font-size: 12px;
         }
 
+        .capitalize {
+          text-transform: capitalize;
+        }
+
         .project__title,
         .ticket__title {
           width: 35%;
