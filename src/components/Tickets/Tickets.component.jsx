@@ -16,6 +16,7 @@ import Paginate from "../Paginate/Paginate.component";
 import Members from "../popups/Members/Members.component";
 import { findProject } from "../../Firebase/firebase";
 import Filter from "../Filter/Filter.component";
+import TotalCounter from "../TotalCounter/TotalCounter.component";
 
 function Tickets({ projectId, tickets }) {
   const user = useSelector((state) => state.user.user);
@@ -69,23 +70,30 @@ function Tickets({ projectId, tickets }) {
   useEffect(() => {
     if (!tickets) return;
 
-    const filteredTickets = tickets
-      .filter((ticket) => {
-        if (filterState.priority === "") {
-          return ticket;
-        }
-        if (ticket.priority.includes(filterState.priority)) {
-          return ticket;
-        }
-      })
-      .filter((ticket) => {
+    const filteredTickets = tickets.filter((ticket) => {
+      if (
+        filterState.priority === "" &&
+        filterState.status === "" &&
+        filterState.type === ""
+      ) {
+        return ticket;
+      }
+      if (
+        ticket.priority.toLowerCase().includes(filterState.priority) &&
+        ticket.status.toLowerCase().includes(filterState.status) &&
+        ticket.type.toLowerCase().includes(filterState.type)
+      ) {
+        return ticket;
+      }
+    });
+    /*     .filter((ticket) => {
         if (filterState.status === "") {
           return ticket;
         }
         if (ticket.status.includes(filterState.status)) {
           return ticket;
         }
-      });
+      }); */
 
     setTicketData(filteredTickets);
   }, [tickets, filterState]);
@@ -256,10 +264,14 @@ function Tickets({ projectId, tickets }) {
                     {ticket.description}
                   </td>
                   <td className={styles.hidden}>
-                    {ticket.members?.map((user) => {
-                      const currentUser = returnSpecificUser(allUsers, user.id);
-                      return <p key={user.id}>{currentUser.fullName}</p>;
-                    })}
+                    {allUsers &&
+                      ticket.members?.map((user) => {
+                        const currentUser = returnSpecificUser(
+                          allUsers,
+                          user.id
+                        );
+                        return <p key={user.id}>{currentUser.fullName}</p>;
+                      })}
                   </td>
                   <td className={styles.hidden}>{ticket.time}</td>
                   <td className={`${styles.hidden} ${styles.capitilize}`}>
@@ -281,6 +293,7 @@ function Tickets({ projectId, tickets }) {
             })}
           </tbody>
         </table>
+        <TotalCounter data={ticketData} />
         <Paginate
           data={ticketData}
           itemsPerPage={5}

@@ -9,11 +9,13 @@ function FilterDropdown({ onClickHandler }) {
   const filterState = useSelector((state) => state.projects.filter);
   const priorityRef = useRef(filterState.priority);
   const statusRef = useRef(filterState.status);
+  const typeRef = useRef(filterState.type);
   const dispatch = useDispatch();
   function filterHandler() {
     const filterData = {
       priority: priorityRef.current.value,
       status: statusRef.current.value,
+      type: typeRef.current.value,
     };
     dispatch(setFilter(filterData));
     onClickHandler();
@@ -49,6 +51,20 @@ function FilterDropdown({ onClickHandler }) {
           <option value="pending">Pending</option>
           <option value="in progress">In Progress</option>
           <option value="resolved">Resolved</option>
+        </select>
+      </div>
+      <div className={styles.select}>
+        <label htmlFor="type">Type</label>
+        <select
+          name="type"
+          id="type"
+          ref={typeRef}
+          defaultValue={filterState?.type}
+        >
+          <option value="">All</option>
+          <option value="issue">Issue</option>
+          <option value="bug">Bug</option>
+          <option value="feature request">Feature Request</option>
         </select>
       </div>
       <Button onClick={filterHandler}>Apply</Button>

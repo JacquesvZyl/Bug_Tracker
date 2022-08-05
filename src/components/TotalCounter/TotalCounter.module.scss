@@ -1,0 +1,14 @@
+.total__container {
+  .total {
+    text-align: end;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 500;
+
+    span {
+      &:nth-of-type(1) {
+        margin-right: 10px;
+      }
+    }
+  }
+}

@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-function Button({ children, disabled = false, ...other }) {
+function Button({ children, className, disabled = false, ...other }) {
   return (
     <button
       disabled={disabled}
-      className={`${styles.button} ${disabled && styles.disabled}`}
+      className={`${styles.button} ${className} ${disabled && styles.disabled}`}
       {...other}
     >
       {children}

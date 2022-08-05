@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.component";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Dashboard from "./components/Routes/Dashboard/Dashboard.component";
 import Project from "./components/Routes/project/Project.component";
 
@@ -24,6 +24,7 @@ import { toastStyleError } from "./utils/Global";
 
 function App() {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.user);
   const [display, setDisplay] = useState(false);
   const [allUsers, setAllUsers] = useState(null);
 
@@ -67,7 +68,7 @@ function App() {
     }
 
     getAllUsers();
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     dispatch(setUsers(allUsers));

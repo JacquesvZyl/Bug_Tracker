@@ -5,20 +5,26 @@ import {
   setCurrentTicket,
 } from "../../../app/projectDataSlice";
 
-import { getProjects, returnUserTickets } from "../../../Firebase/firebase";
+import {
+  findProject,
+  getProjects,
+  returnUserTickets,
+} from "../../../Firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";
 import TableHeader from "../../TableHeaders/TableHeader.component";
 import Paginate from "../../Paginate/Paginate.component";
 import Filter from "../../Filter/Filter.component";
+import TotalCounter from "../../TotalCounter/TotalCounter.component";
 
 function TicketsRoute() {
   const user = useSelector((state) => state.user.user);
   const filterState = useSelector((state) => state.projects.filter);
-  const projects = useSelector((state) => state.projects.projects);
+  //const projects = useSelector((state) => state.projects.projects);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [projects, setAllProjects] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState(null);
   const [sortButtons, setSortButtons] = useState({});
@@ -58,7 +64,15 @@ function TicketsRoute() {
     setFilteredTickets(filteredTicketData);
   }, [filterState, tickets]);
 
-  function onTicketClick(projectId, data) {
+  useEffect(() => {
+    async function getAllProjects() {
+      await getProjects(setAllProjects);
+    }
+
+    getAllProjects();
+  }, []);
+
+  async function onTicketClick(projectId, data) {
     dispatch(setCurrentTicket(data));
     const currentProject = projects.filter(
       (project) => project.id === projectId
@@ -164,6 +178,8 @@ function TicketsRoute() {
             })}
           </tbody>
         </table>
+        <TotalCounter data={filteredTickets} />
+
         <Paginate data={filteredTickets} setCurrentItems={setCurrentItems} />
       </div>
     </div>

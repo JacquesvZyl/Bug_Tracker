@@ -153,13 +153,14 @@ function Projects() {
                     {project.description}
                   </td>
                   <td className={styles.hidden}>
-                    {project.members?.length > 0 &&
+                    {allUsers &&
+                      project.members?.length > 0 &&
                       project.members?.map((member) => {
                         const selectedUser = returnSpecificUser(
                           allUsers,
                           member.id
                         );
-                        return <p key={member.id}>{selectedUser.fullName}</p>;
+                        return <p key={member.id}>{selectedUser?.fullName}</p>;
                       })}
                   </td>
                   <td className={styles.hidden}>

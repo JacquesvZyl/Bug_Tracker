@@ -39,7 +39,7 @@ function DeleteConfirmation({ onClickHandler, isTicket, ticketId, projectId }) {
     <div className={styles.wrapper}>
       <div className={styles.confirmation}>
         <CancelIcon className={styles.icon} />
-        <h2>Are you sure?</h2>
+        <span>Are you sure?</span>
         <div className={styles.text}>
           <p>Do you really want to delete this record?</p>
           <p>This process cannot be undone.</p>
@@ -47,7 +47,7 @@ function DeleteConfirmation({ onClickHandler, isTicket, ticketId, projectId }) {
         <div className={styles.button__container}>
           <Button onClick={onClickHandler}>Cancel</Button>
           <Button
-            style={{ backgroundColor: "red" }}
+            className={styles.delete__button}
             onClick={deleteTicketHandler}
             disabled={disabled}
           >

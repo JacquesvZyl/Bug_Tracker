@@ -8,7 +8,10 @@ import styles from "./Filter.module.scss";
 function Filter() {
   const filterState = useSelector((state) => state.projects.filter);
   const [showOptions, setOptions] = useState(false);
-  const isFiltered = filterState.priority !== "" || filterState.status !== "";
+  const isFiltered =
+    filterState.priority !== "" ||
+    filterState.status !== "" ||
+    filterState.type !== "";
 
   function showOptionsHandler() {
     setOptions((prevVal) => !prevVal);

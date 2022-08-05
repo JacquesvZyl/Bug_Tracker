@@ -8,6 +8,7 @@ const initialState = {
   filter: {
     status: "",
     priority: "",
+    type: "",
   },
 };
 
