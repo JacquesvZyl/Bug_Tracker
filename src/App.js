@@ -21,6 +21,7 @@ import ProfileRoute from "./components/Routes/Profile/ProfileRoute.component";
 import { setUsers } from "./app/allUsersSlice";
 import toast from "react-hot-toast";
 import { toastStyleError } from "./utils/Global";
+import ForgotPassword from "./components/Routes/ForgotPassword/ForgotPassword.component";
 
 function App() {
   const dispatch = useDispatch();
@@ -88,6 +89,7 @@ function App() {
         </Route>
         <Route element={<ProtectedLoggedInRoute />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Route>
       </Routes>
     </div>

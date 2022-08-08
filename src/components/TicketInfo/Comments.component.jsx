@@ -26,7 +26,6 @@ function Comments() {
   useEffect(() => {
     async function setCommentsToState() {
       await getComments(projectId, ticketData.id, setComments);
-      console.log(comments);
     }
 
     setCommentsToState();
@@ -71,7 +70,7 @@ function Comments() {
 
   async function removeComment(e) {
     const commentId = e.target.dataset.commentid;
-    console.log(commentId);
+
     try {
       await deleteComment(projectId, ticketData.id, commentId);
     } catch (error) {
@@ -85,7 +84,7 @@ function Comments() {
   const sortedComments = comments?.slice().sort((a, b) => {
     return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
   });
-  console.log(sortedComments);
+
   return (
     <>
       {showProfile && (
@@ -102,14 +101,14 @@ function Comments() {
         <div className={styles.comments}>
           {sortedComments?.map((comment) => {
             const returnedUser = returnSpecificUser(allUsers, comment.authorId);
-            {
-              showProfile && (
-                <ProfilePopup
-                  userData={returnedUser}
-                  onClickHandler={showProfileHandler}
-                />
-              );
-            }
+
+            showProfile && (
+              <ProfilePopup
+                userData={returnedUser}
+                onClickHandler={showProfileHandler}
+              />
+            );
+
             return (
               <div className={styles.comment} key={comment.id}>
                 <div className={styles.comment__header}>

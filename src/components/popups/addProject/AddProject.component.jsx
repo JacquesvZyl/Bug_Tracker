@@ -1,18 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Button from "../../ui/button/Button.component";
 import Modal from "../modal/Modal.component";
 import styles from "./AddProject.module.scss";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import * as ReactDOM from "react-dom";
-import {
-  createProject,
-  editProject,
-  getUsers,
-} from "../../../Firebase/firebase";
+import { createProject, editProject } from "../../../Firebase/firebase";
 import { toastStyleError } from "../../../utils/Global";
 import DisplayUser from "../../DisplayUser/DisplayUser.component";
-import { useDispatch } from "react-redux";
+
 const rootElement = document.getElementById("modal-root");
 function AddProject({ onClickHandler, isNew }) {
   const user = useSelector((state) => state.user.user);
@@ -23,7 +19,6 @@ function AddProject({ onClickHandler, isNew }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const nameRef = useRef(isNew ? null : currentProject.name);
   const descriptionRef = useRef(isNew ? null : currentProject.description);
-  const dispatch = useDispatch();
 
   async function createProjectHandler(e) {
     e.preventDefault();
@@ -44,8 +39,6 @@ function AddProject({ onClickHandler, isNew }) {
           id: user.id,
         };
       });
-
-      console.log(filteredUsers);
 
       const dbData = {
         name,

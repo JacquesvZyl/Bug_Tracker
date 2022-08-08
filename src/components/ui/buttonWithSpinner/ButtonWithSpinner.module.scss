@@ -9,6 +9,11 @@ button {
   font-weight: 600;
   &:disabled {
     cursor: default;
+    background-color: rgb(177, 177, 177);
+  }
+
+  &:hover {
+    background-color: #4857da;
   }
 }
 

@@ -6,10 +6,9 @@ import { useParams } from "react-router-dom";
 import TicketInfo from "../../TicketInfo/TicketInfo.component";
 import { getTickets } from "../../../Firebase/firebase";
 
-import { useDispatch } from "react-redux";
 function Project() {
   const [tickets, setTickets] = useState(null);
-  const dispatch = useDispatch();
+
   const { id: projectId } = useParams();
 
   useEffect(() => {
@@ -18,8 +17,7 @@ function Project() {
     }
 
     showTickets();
-    console.log("in useEffect in project route");
-  }, []);
+  }, [projectId]);
 
   return (
     <div className={styles.project}>

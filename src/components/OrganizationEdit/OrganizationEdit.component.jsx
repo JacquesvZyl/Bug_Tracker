@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Button from "../ui/button/Button.component";
 import styles from "./OrganizationEdit.module.scss";
 import toast from "react-hot-toast";
 import { toastStyle, toastStyleError } from "../../utils/Global";
-import { deleteUser, setUserRole } from "../../Firebase/firebase";
+import { setUserRole } from "../../Firebase/firebase";
 import { useSelector } from "react-redux";
 
 function OrganizationEdit({ selectedUser }) {

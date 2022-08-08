@@ -4,9 +4,9 @@ import styles from "./DeleteConfirmation.module.scss";
 import * as ReactDOM from "react-dom";
 import Button from "../../ui/button/Button.component";
 import { deleteProject, deleteTicket } from "../../../Firebase/firebase";
-import { useParams } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+
 import { setCurrentTicket } from "../../../app/projectDataSlice";
 import CancelIcon from "@mui/icons-material/Cancel";
 const rootElement = document.getElementById("modal-root");
@@ -14,10 +14,6 @@ const rootElement = document.getElementById("modal-root");
 function DeleteConfirmation({ onClickHandler, isTicket, ticketId, projectId }) {
   const dispatch = useDispatch();
   const [disabled, setDisabled] = useState(false);
-
-  /*   const currentTicketState = useSelector(
-    (state) => state.projects.selectedTicket
-  ); */
 
   async function deleteTicketHandler() {
     setDisabled(true);

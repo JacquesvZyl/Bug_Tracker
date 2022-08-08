@@ -31,7 +31,6 @@ function Projects() {
   const allUsers = useSelector((state) => state.allUsers.allUsers);
   const userHasAccess = user?.role?.admin || user?.role?.submitter;
   const userHasDeleteAccess = user?.role?.admin;
-  console.log(userHasAccess);
 
   useEffect(() => {
     async function setProjectdata() {
@@ -40,7 +39,7 @@ function Projects() {
     }
 
     setProjectdata();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(setAllProjects(projects));

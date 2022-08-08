@@ -5,7 +5,6 @@ import styles from "./AddTicket.module.scss";
 import * as ReactDOM from "react-dom";
 import { useSelector } from "react-redux";
 import {
-  createProject,
   createTicket,
   editTicket,
   findProject,
@@ -32,7 +31,6 @@ function AddTicket({ id: projectId, onClickHandler, isNew }) {
     async function getCurrentProject() {
       const data = await findProject(projectId);
       setCurrentProject({ ...data, id: projectId });
-      console.log(currentProject);
     }
 
     getCurrentProject();

@@ -11,16 +11,13 @@ import {
   updateEmail,
 } from "firebase/auth";
 import {
-  addDoc,
   collection,
-  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
-  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -313,7 +310,7 @@ export async function getUserTickets(projectId, userId, setState) {
 
 export async function returnUserTickets(userId, setState) {
   return onSnapshot(collection(db, `projects`), (snapshot) => {
-    snapshot.docs.map((snap) => {
+    snapshot.docs.forEach((snap) => {
       const found = snap.data().members.some((user) => user.id === userId);
       if (found) {
         getUserTickets(snap.id, userId, setState);
@@ -344,7 +341,6 @@ export async function editUserDetails(uid, data) {
   try {
     const auth = getAuth();
     if (auth.currentUser.email !== data.email) {
-      console.log(auth.currentUser);
       await updateEmail(auth.currentUser, data.email);
     }
     const ref = doc(db, `users/${uid}`);
@@ -370,4 +366,10 @@ export async function setUserImage(uid, fileName) {
   } catch (e) {
     throw new Error(e.message);
   }
+}
+
+export async function forgotPassword(email) {
+  return await sendPasswordResetEmail(auth, email, {
+    url: "http://localhost:3000/login",
+  });
 }
