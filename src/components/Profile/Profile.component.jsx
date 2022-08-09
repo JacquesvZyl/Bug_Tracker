@@ -31,10 +31,7 @@ function Profile() {
       }
 
       if (user.email === "demo@user.com" && email !== user.email) {
-        toast(`Email cannot be changed on demo account`, {
-          duration: 4000,
-          style: toastStyleError,
-        });
+        throw new Error(`Email cannot be changed on demo account`);
       }
 
       if (
