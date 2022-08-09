@@ -17,6 +17,7 @@ function DisplayUser({
     if (!isInList) return;
     const filtered = selectedUsers.filter((u) => u.id !== user.id);
     selectedUserHandler((prevVal) => filtered);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ function DisplayUser({
 
       selectedUserHandler((prevVal) => filtered);
     }
+    // eslint-disable-next-line
   }, [clicked, user, selectedUserHandler]);
 
   function clickedHandler() {
