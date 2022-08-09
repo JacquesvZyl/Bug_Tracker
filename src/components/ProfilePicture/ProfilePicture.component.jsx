@@ -38,7 +38,7 @@ function ProfilePicture({ profileImage, border = null }) {
         <img
           src={imageUrl}
           className={styles.image}
-          alt="profile picture"
+          alt="profile"
           style={border && { border: `5px solid ${border}` }}
         />
       )}

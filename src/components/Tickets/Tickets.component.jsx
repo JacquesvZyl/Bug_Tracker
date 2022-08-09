@@ -85,6 +85,7 @@ function Tickets({ projectId, tickets }) {
       ) {
         return ticket;
       }
+      return false;
     });
     /*     .filter((ticket) => {
         if (filterState.status === "") {

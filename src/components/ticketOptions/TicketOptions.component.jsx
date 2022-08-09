@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./TicketOptions.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import TicketDropdown from "../popups/TicketDropdown/TicketDropdown.component";

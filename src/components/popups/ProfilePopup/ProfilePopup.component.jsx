@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "../modal/Modal.component";
 import styles from "./ProfilePopup.module.scss";
 import * as ReactDOM from "react-dom";

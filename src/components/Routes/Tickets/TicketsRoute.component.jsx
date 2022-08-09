@@ -5,11 +5,7 @@ import {
   setCurrentTicket,
 } from "../../../app/projectDataSlice";
 
-import {
-  findProject,
-  getProjects,
-  returnUserTickets,
-} from "../../../Firebase/firebase";
+import { getProjects, returnUserTickets } from "../../../Firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { priorityColors } from "../../../utils/Global";
 import styles from "./TicketsRoute.module.scss";
@@ -43,23 +39,23 @@ function TicketsRoute() {
   useEffect(() => {
     if (!tickets) return;
 
-    const filteredTicketData = tickets
-      .filter((ticket) => {
-        if (filterState.priority === "") {
-          return ticket;
-        }
-        if (ticket.priority.includes(filterState.priority)) {
-          return ticket;
-        }
-      })
-      .filter((ticket) => {
-        if (filterState.status === "") {
-          return ticket;
-        }
-        if (ticket.status.includes(filterState.status)) {
-          return ticket;
-        }
-      });
+    const filteredTicketData = tickets.filter((ticket) => {
+      if (
+        filterState.priority === "" &&
+        filterState.status === "" &&
+        filterState.type === ""
+      ) {
+        return ticket;
+      }
+      if (
+        ticket.priority.toLowerCase().includes(filterState.priority) &&
+        ticket.status.toLowerCase().includes(filterState.status) &&
+        ticket.type.toLowerCase().includes(filterState.type)
+      ) {
+        return ticket;
+      }
+      return false;
+    });
 
     setFilteredTickets(filteredTicketData);
   }, [filterState, tickets]);

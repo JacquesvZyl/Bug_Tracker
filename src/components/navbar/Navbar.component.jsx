@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Navbar.module.scss";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { signOutUser } from "../../Firebase/firebase";
 import { useSelector } from "react-redux";
 import bugTrackerLogo from "../../assets/images/bugTracker.png";

@@ -7,7 +7,6 @@ import { toastStyleError } from "../../utils/Global";
 import ButtonWithSpinner from "../ui/buttonWithSpinner/ButtonWithSpinner.component";
 import styles from "./SignUp.module.scss";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 function SignUp() {
   const emailRef = useRef(null);
