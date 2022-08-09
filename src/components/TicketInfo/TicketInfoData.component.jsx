@@ -1,8 +1,15 @@
 import React from "react";
-import { priorityColors } from "../../utils/Global";
+import { priorityColors, returnSpecificUser } from "../../utils/Global";
 import styles from "./TicketInfoData.module.scss";
+import { useSelector } from "react-redux";
 
 function TicketInfoData({ data }) {
+  const allUsers = useSelector((state) => state.allUsers.allUsers);
+  const author = returnSpecificUser(allUsers, data.author.id);
+  const members = data.members.map((member) =>
+    returnSpecificUser(allUsers, member.id)
+  );
+
   return (
     <div className={styles.ticket__info}>
       <div className={`${styles["ticket__info--section"]} ${styles.title}`}>
@@ -17,7 +24,7 @@ function TicketInfoData({ data }) {
       </div>
       <div className={styles["ticket__info--section"]}>
         <h4>Author</h4>
-        <p>{data.author.name}</p>
+        <p>{author.fullName}</p>
       </div>
       <div className={styles["ticket__info--section"]}>
         <h4>Time Estimate (hours)</h4>
@@ -51,7 +58,7 @@ function TicketInfoData({ data }) {
         className={`${styles["ticket__info--section"]} ${styles["grid-col-span-3"]} ${styles.members}`}
       >
         <h4>Assigned Members</h4>
-        {data.members?.map((member) => (
+        {members.map((member) => (
           <span key={member.id}>{member.fullName}</span>
         ))}
       </div>
