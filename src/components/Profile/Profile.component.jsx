@@ -30,6 +30,13 @@ function Profile() {
         throw new Error("Please fill out all fields");
       }
 
+      if (user.email === "demo@user.com" && email !== user.email) {
+        toast(`Email cannot be changed on demo account`, {
+          duration: 4000,
+          style: toastStyleError,
+        });
+      }
+
       if (
         name === user.name &&
         surname === user.surname &&
