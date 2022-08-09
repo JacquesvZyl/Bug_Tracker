@@ -60,7 +60,7 @@ function Tickets({ projectId, tickets }) {
     }
 
     setCurrentProject();
-  }, [pathname]);
+  }, [pathname, currentProject]);
 
   useEffect(() => {
     if (!currentProjectState) return;
@@ -102,7 +102,7 @@ function Tickets({ projectId, tickets }) {
     if (!ticketId) return;
     const currentTicket = tickets?.find((ticket) => ticket.id === ticketId);
     dispatch(setCurrentTicket(currentTicket));
-  }, [ticketId, tickets]);
+  }, [ticketId, tickets, dispatch]);
 
   function showTicketHandler() {
     setTicketModal((prevVal) => !prevVal);
